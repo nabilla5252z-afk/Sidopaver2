@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cimol Kering - Snack Sehat & Nikmat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #FF9800 0%, #FF6F00 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255,152,0,0.3);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #FF9800 0%, #FF6F00 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            margin-bottom: 50px;
+        }
+
+        .products-section {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Alternating Large Grid */
+        .alternating-grid {
+            display: grid;
+            gap: 40px;
+        }
+
+        .product-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .product-item:nth-child(even) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .product-item:nth-child(even) .product-image {
+            order: 2;
+        }
+
+        .product-item:nth-child(even) .product-content {
+            order: 1;
+        }
+
+        .product-image {
+            background: linear-gradient(135deg, #FFB74D 0%, #FF9800 100%);
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            color: rgba(255,255,255,0.4);
+            font-weight: bold;
+        }
+
+        .product-content {
+            padding: 40px;
+        }
+
+        .product-content h3 {
+            font-size: 1.8em;
+            color: #FF6F00;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+
+        .benefit-tag {
+            display: inline-block;
+            background: #FFE0B2;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #FF6F00;
+            font-weight: 500;
+        }
+
+        .product-content .price {
+            font-size: 1.5em;
+            color: #FF6F00;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quantity-selector button {
+            background: #FF9800;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.3s ease;
+        }
+
+        .quantity-selector button:hover {
+            background: #FF6F00;
+        }
+
+        .quantity-selector input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #FF9800;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1em;
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(135deg, #FF9800 0%, #FF6F00 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        /* Sidebar Keranjang - STICKY */
+        .cart-sidebar {
+            width: 350px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            background: #FFFAF0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(255,152,0,0.15);
+            padding: 30px;
+            border-top: 4px solid #FF9800;
+        }
+
+        .cart-sidebar h2 {
+            color: #FF6F00;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #FF9800;
+            padding-bottom: 10px;
+        }
+
+        .cart-items {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            background: #FFE0B2;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            border-left: 4px solid #FF9800;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        .cart-item-qty {
+            color: #FF9800;
+            font-weight: bold;
+            margin: 0 8px;
+        }
+
+        .cart-item-price {
+            color: #FF6F00;
+            font-weight: bold;
+        }
+
+        .remove-item {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-left: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .remove-item:hover {
+            background: #ff5252;
+        }
+
+        .cart-summary {
+            border-top: 2px solid #e0e0e0;
+            padding-top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .summary-row.total {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #FF6F00;
+            margin-top: 15px;
+            border-top: 3px solid #FF9800;
+            padding-top: 10px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .checkout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.5);
+        }
+
+        .checkout-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        /* Form Pesanan */
+        .order-form {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 3px solid #FF9800;
+        }
+
+        .order-form h3 {
+            color: #FF6F00;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #FF6F00;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #FFE0B2;
+            border-radius: 8px;
+            font-size: 0.95em;
+            background: white;
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #FF9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            padding-right: 35px;
+            color: #FF6F00;
+        }
+
+        .form-group input[type="date"] {
+            color: #FF6F00;
+            font-weight: 500;
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .sk-text {
+            font-size: 0.8em;
+            color: #FF9800;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .form-note {
+            background: #FFF3E0;
+            border-left: 4px solid #FF9800;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            color: #FF6F00;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+            }
+
+            .product-item {
+                grid-template-columns: 1fr !important;
+            }
+
+            .product-item:nth-child(even) .product-image {
+                order: 1;
+            }
+
+            .product-item:nth-child(even) .product-content {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .hero h2 {
+                font-size: 1.3em;
+            }
+
+            .product-content {
+                padding: 20px;
+            }
+
+            .cart-sidebar {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Cimol Kering </h1>
+        <p>Camilan Enak, Murah, Banyak untuk temani Belajar atau Bekerja</p>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h2>Alasan Kamu Harus Coba Cimol Kering Kami</h2>
+        <p>Lawan Jenuh dan Stressnya Bekerja atau Belajar dengan renyahnya Cimol Kering</p>
+        <p>Pilih rasa yang paling bikin kamu kembali fokus</p>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Products Section -->
+        <div class="products-section">
+            <div class="alternating-grid">
+                <!-- Product 1 -->
+                <div class="product-item">
+                    <div class="product-image">🧂</div>
+                    <div class="product-content">
+                        <h3>Cimol Kering Asin</h3>
+                        <div class="benefit-tag">✓ Menghilangkan Jenuh</div>
+                        <p class="product-description">
+                            Cimol kering dengan rasa asin yang sempurna untuk melepas kejenuhan saat bekerja atau belajar. Teksturnya yang renyah dan gurih membuat Anda tahan lama fokus dan produktif sepanjang hari.
+                        </p>
+                        <div class="price">Rp 5.000</div>
+                        <div class="quantity-selector">
+                            <button onclick="decrementQty(this)">−</button>
+                            <input type="number" value="1" min="1" class="qty-input">
+                            <button onclick="incrementQty(this)">+</button>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Cimol Kering Asin', 5000, this)">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-item">
+                    <div class="product-image">🌶️</div>
+                    <div class="product-content">
+                        <h3>Cimol Kering Pedas</h3>
+                        <div class="benefit-tag">✓ Mengatasi Bosan</div>
+                        <p class="product-description">
+                            Cimol kering dengan bumbu pedas yang menggugah selera, cocok untuk mengatasi rasa bosan dan monoton. Kepedasan yang pas membuat lidah bergerak dan adrenalin terpacu saat mengerjakan tugas berat.
+                        </p>
+                        <div class="price">Rp 5.000</div>
+                        <div class="quantity-selector">
+                            <button onclick="decrementQty(this)">−</button>
+                            <input type="number" value="1" min="1" class="qty-input">
+                            <button onclick="incrementQty(this)">+</button>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Cimol Kering Pedas', 5000, this)">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-item">
+                    <div class="product-image">🍯</div>
+                    <div class="product-content">
+                        <h3>Cimol Kering Manis</h3>
+                        <div class="benefit-tag">✓ Mengurangi Stress</div>
+                        <p class="product-description">
+                            Cimol kering dengan lapisan rasa manis yang lembut, sempurna untuk mengurangi stres dan menciptakan momen istirahat yang menyenangkan. Kematangan rasa yang pas membuat hati terasa lebih tenang dan segar.
+                        </p>
+                        <div class="price">Rp 5.000</div>
+                        <div class="quantity-selector">
+                            <button onclick="decrementQty(this)">−</button>
+                            <input type="number" value="1" min="1" class="qty-input">
+                            <button onclick="incrementQty(this)">+</button>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('Cimol Kering Manis', 5000, this)">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Sidebar (Sticky) -->
+        <aside class="cart-sidebar">
+            <h2>🛒 Keranjang</h2>
+            
+            <div class="cart-items" id="cartItems">
+                <div class="empty-cart-message">Keranjang Anda masih kosong</div>
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="total">Rp 0</span>
+                </div>
+            </div>
+
+            <!-- Form Pengisian Data -->
+            <div class="order-form">
+                <h3>📝 Detail Pemesan</h3>
+                
+                <div class="form-group">
+                    <label for="buyerName">Nama Pembeli</label>
+                    <input type="text" id="buyerName" placeholder="Masukkan nama Anda" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pickupLocation">Tempat Ambil</label>
+                    <select id="pickupLocation" required>
+                        <option value="">-- Pilih Tempat Ambil --</option>
+                        <option value="Taman STID">📍 Taman STID</option>
+                        <option value="Diantar Kerumahmu (dengan S&K)">🚗 Diantar Kerumahmu (dengan S&K)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="pickupDate">Tanggal Pengambilan</label>
+                    <input type="date" id="pickupDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentMethod">Metode Pembayaran</label>
+                    <select id="paymentMethod" required>
+                        <option value="">-- Pilih Metode Pembayaran --</option>
+                        <option value="Qris/TF">💳 Qris/Transfer Bank</option>
+                        <option value="Cash">💵 Cash (Uang Tunai)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="checkout-btn" onclick="openWhatsApp()" id="checkoutBtn" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 2.1.56 4.09 1.52 5.8L0 24l6.39-1.48C8.9 23.44 10.9 24 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0zm0 22c-1.87 0-3.67-.5-5.23-1.35l-.37-.2-3.88.9.92-3.71-.24-.37C2.5 15.67 2 13.88 2 12c0-5.51 4.49-10 10-10s10 4.49 10 10-4.49 10-10 10z"/>
+                    <path d="M16.67 14.59c-.28-.14-1.65-.82-1.91-.92-.25-.09-.44-.14-.62.14-.19.28-.72.92-.88 1.11-.16.19-.33.21-.61.07-.28-.14-1.19-.44-2.27-1.4-.84-.75-1.41-1.68-1.57-1.97-.16-.28-.02-.44.12-.58.12-.12.28-.33.41-.49.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.62-1.5-.85-2.05-.23-.54-.46-.46-.62-.47-.16 0-.35-.02-.53-.02-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.39 0 1.41 1.03 2.77 1.17 2.96.14.19 1.98 3.02 4.82 4.24 2.85 1.22 2.85.81 3.37.76.52-.05 1.65-.67 1.88-1.33.23-.66.23-1.23.16-1.35-.07-.12-.26-.19-.55-.33z"/>
+                </svg>
+                WhatsApp
+            </button>
+        </aside>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function incrementQty(button) {
+            const input = button.previousElementSibling;
+            input.value = parseInt(input.value) + 1;
+        }
+
+        function decrementQty(button) {
+            const input = button.nextElementSibling;
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        function addToCart(productName, price, button) {
+            const quantityInput = button.previousElementSibling.querySelector('.qty-input');
+            const quantity = parseInt(quantityInput.value);
+
+            // Cek apakah produk sudah ada di keranjang
+            const existingItem = cart.find(item => item.name === productName);
+
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    name: productName,
+                    price: price,
+                    quantity: quantity
+                });
+            }
+
+            // Reset quantity input
+            quantityInput.value = 1;
+
+            // Update tampilan keranjang
+            updateCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            const cartBtn = document.getElementById('checkoutBtn');
+
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<div class="empty-cart-message">Keranjang Anda masih kosong</div>';
+                cartBtn.style.display = 'none';
+            } else {
+                let html = '';
+                cart.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    html += `
+                        <div class="cart-item">
+                            <div>
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-qty">${item.quantity} × Rp ${item.price.toLocaleString('id-ID')}</div>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div class="cart-item-price">Rp ${itemTotal.toLocaleString('id-ID')}</div>
+                                <button class="remove-item" onclick="removeFromCart(${index})">×</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                cartItemsDiv.innerHTML = html;
+                cartBtn.style.display = 'flex';
+            }
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let total = 0;
+
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+            });
+
+            document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
+        }
+
+        function openWhatsApp() {
+            // Validasi keranjang
+            if (cart.length === 0) {
+                alert('Keranjang Anda kosong!');
+                return;
+            }
+
+            // Validasi form
+            const buyerName = document.getElementById('buyerName').value.trim();
+            const pickupLocation = document.getElementById('pickupLocation').value;
+            const pickupDate = document.getElementById('pickupDate').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+
+            if (!buyerName) {
+                alert('Silakan masukkan nama Anda!');
+                return;
+            }
+            if (!pickupLocation) {
+                alert('Silakan pilih tempat ambil!');
+                return;
+            }
+            if (!pickupDate) {
+                alert('Silakan pilih tanggal pengambilan!');
+                return;
+            }
+            if (!paymentMethod) {
+                alert('Silakan pilih metode pembayaran!');
+                return;
+            }
+
+            // Hitung kuantitas per produk
+            let qtyAsin = 0, qtyPedas = 0, qtyManis = 0;
+            let total = 0;
+            
+            cart.forEach(item => {
+                if (item.name === 'Cimol Kering Asin') {
+                    qtyAsin = item.quantity;
+                } else if (item.name === 'Cimol Kering Pedas') {
+                    qtyPedas = item.quantity;
+                } else if (item.name === 'Cimol Kering Manis') {
+                    qtyManis = item.quantity;
+                }
+                total += item.price * item.quantity;
+            });
+
+            // Kirim ke Google Forms
+            submitToGoogleForm(buyerName, pickupLocation, pickupDate, paymentMethod, qtyAsin, qtyPedas, qtyManis, total);
+
+            // Buat teks pesanan untuk WhatsApp
+            let message = '*🛍️ PESANAN CIMOL KERING PREMIUM*\n\n';
+            
+            message += '*👤 DATA PEMESAN:*\n';
+            message += `Nama: ${buyerName}\n`;
+            message += `Tempat Ambil: ${pickupLocation}\n`;
+            
+            // Format tanggal dengan nama hari
+            const dateObj = new Date(pickupDate + 'T00:00:00');
+            const hariOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const tanggalFormatted = dateObj.toLocaleDateString('id-ID', hariOptions);
+            message += `Tanggal Ambil: ${tanggalFormatted}\n`;
+            message += `Metode Bayar: ${paymentMethod}\n\n`;
+
+            message += '*📋 DETAIL PESANAN:*\n';
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                message += `${index + 1}. ${item.name}\n`;
+                message += `   Qty: ${item.quantity} × Rp ${item.price.toLocaleString('id-ID')} = Rp ${itemTotal.toLocaleString('id-ID')}\n`;
+            });
+
+            message += '\n*━━━━━━━━━━━━━━━━*\n';
+            message += `💰 *Total: Rp ${total.toLocaleString('id-ID')}*\n`;
+            message += '*━━━━━━━━━━━━━━━━*\n\n';
+            message += 'Terima kasih telah memesan! 🙏';
+
+            // Encode untuk URL
+            const encodedMessage = encodeURIComponent(message);
+
+            // Buka WhatsApp
+            const whatsappNumber = '62895604919010'; // Ganti dengan nomor Anda tanpa + dan spasi
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+        }
+
+        function submitToGoogleForm(nama, lokasi, tanggal, metode, qtyAsin, qtyPedas, qtyManis, total) {
+            // Google Form ID
+            const formId = '1FAIpQLSeDVnEzdZpBGgj3Rds39SQZOCXWox_vuA6g7-okAjvNPJ__9A';
+            
+            // Entry IDs untuk setiap field di Google Form
+            const formData = new FormData();
+            
+            // Sesuaikan entry ID dengan form Anda
+            formData.append('entry.39058957', nama);                    // Nama Pembeli
+            formData.append('entry.269585913', lokasi);                 // Tempat Ambil
+            formData.append('entry.894911535', tanggal);                // Tanggal Pengambilan
+            formData.append('entry.1323778650', metode);                // Metode Pembayaran
+            formData.append('entry.168921694', qtyAsin);                // Qty Cimol Kering Asin
+            formData.append('entry.1437324933', qtyPedas);              // Qty Cimol Kering Pedas
+            formData.append('entry.1514945499', qtyManis);              // Qty Cimol Kering Manis
+            formData.append('entry.560903875', total);                  // Total
+            
+            // URL endpoint Google Form
+            const url = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
+            
+            // Kirim data dengan fetch
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            })
+            .then(() => {
+                console.log('Data berhasil dikirim ke Google Forms');
+            })
+            .catch(error => {
+                console.error('Error mengirim ke Google Forms:', error);
+            });
+        }
+
+        // Set min date untuk date input (hari ini)
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('pickupDate').setAttribute('min', today);
+        });
+
+        // Initialize
+        updateCart();
+    </script>
+</body>
+</html>
