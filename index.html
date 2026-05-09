@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cimol Kering - Snack Sehat & Nikmat</title>
+    <title>Si Dopa - Singkong Crunchy Balls</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Adigiana Toybox', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
             color: #333;
             line-height: 1.6;
@@ -28,18 +28,39 @@
 
         header h1 {
             font-size: 2.5em;
-            margin-bottom: 5px;
+            margin: 0;
+            margin-bottom: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        header h1 img {
+            display:block;
+            margin: 0 auto -45px;
+            max-width: 100%;
+            max-height: 300px;
+            width: 300px;
+            height: 300px;
+            object-fit: contain;
+        }
+        header p {
+            font-size: 1.1em;
+            opacity: 1;
+            color: #FFFFFF;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
-        header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
         .hero {
-            background: linear-gradient(135deg, #FF9800 0%, #FF6F00 100%);
-            color: white;
+            background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url('background awal.jpg') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            color: rgb(50, 19, 0);
             padding: 60px 20px;
             text-align: center;
             margin-bottom: 50px;
@@ -112,6 +133,16 @@
             font-size: 120px;
             color: rgba(255,255,255,0.4);
             font-weight: bold;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
         }
 
         .product-content {
@@ -412,6 +443,10 @@
             margin-bottom: 15px;
         }
 
+        .hidden-sales-input {
+            display: none;
+        }
+
         @media (max-width: 1024px) {
             .container {
                 flex-direction: column;
@@ -458,15 +493,15 @@
 <body>
     <!-- Header -->
     <header>
-        <h1>Cimol Kering </h1>
+        <h1><img src="sidopa.png" alt="Si Dopa"></h1>
         <p>Camilan Enak, Murah, Banyak untuk temani Belajar atau Bekerja</p>
     </header>
 
     <!-- Hero Section -->
     <div class="hero">
-        <h2>Alasan Kamu Harus Coba Cimol Kering Kami</h2>
-        <p>Lawan Jenuh dan Stressnya Bekerja atau Belajar dengan renyahnya Cimol Kering</p>
-        <p>Pilih rasa yang paling bikin kamu kembali fokus</p>
+        <h2>Bukan hanya sekedar camilan, tapi teman produktif yang menyenangkan</h2>
+        <p>✅Si Dopa akan memberikan pengalaman lawan jenuh dan stressnya bekerja atau belajar melalui teksturnya yang renyah </p>
+        <p>✅Sensasi varian rasa yang buat kamu kembali fokus dan enjoy dengan aktivtasmu</p>
     </div>
 
     <!-- Main Container -->
@@ -476,12 +511,14 @@
             <div class="alternating-grid">
                 <!-- Product 1 -->
                 <div class="product-item">
-                    <div class="product-image">🧂</div>
+                    <div class="product-image">
+                        <img src="etalase_ori.jpg" alt="Si' Ori">
+                    </div>
                     <div class="product-content">
-                        <h3>Cimol Kering Asin</h3>
-                        <div class="benefit-tag">✓ Menghilangkan Jenuh</div>
+                        <h3>Si' Ori</h3>
+                        <div class="benefit-tag">✓ Menghilangkan Bosan dengan Rasa Asli</div>
                         <p class="product-description">
-                            Cimol kering dengan rasa asin yang sempurna untuk melepas kejenuhan saat bekerja atau belajar. Teksturnya yang renyah dan gurih membuat Anda tahan lama fokus dan produktif sepanjang hari.
+                            Singkong Crunchy Balls dengan rasa asli yang gurih dan renyah, bantu kamu menghilangkan rasa jenuh saat bekerja atau belajar. Setiap gigitan memberikan sensasi renyah yang memuaskan, membuat suasana hati kembali siap bekerja.
                         </p>
                         <div class="price">Rp 5.000</div>
                         <div class="quantity-selector">
@@ -489,18 +526,20 @@
                             <input type="number" value="1" min="1" class="qty-input">
                             <button onclick="incrementQty(this)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" onclick="addToCart('Cimol Kering Asin', 5000, this)">Tambah ke Keranjang</button>
+                        <button class="add-to-cart-btn" onclick="addToCart('Si\' Ori', 5000, this)">Tambah ke Keranjang</button>
                     </div>
                 </div>
 
                 <!-- Product 2 -->
                 <div class="product-item">
-                    <div class="product-image">🌶️</div>
+                    <div class="product-image">
+                        <img src="etalase_nori.jpg" alt="Si' Nori">
+                    </div>
                     <div class="product-content">
-                        <h3>Cimol Kering Pedas</h3>
-                        <div class="benefit-tag">✓ Mengatasi Bosan</div>
+                        <h3>Si' Nori</h3>
+                        <div class="benefit-tag">✓ Mengatasi Bosan dengan Rasa Rumput Laut</div>
                         <p class="product-description">
-                            Cimol kering dengan bumbu pedas yang menggugah selera, cocok untuk mengatasi rasa bosan dan monoton. Kepedasan yang pas membuat lidah bergerak dan adrenalin terpacu saat mengerjakan tugas berat.
+                            Singkong Crunchy Balls dengan bumbu Rumput Laut yang menggugah selera, cocok untuk mengatasi rasa bosan dan monoton. Sensasi rasa rumput laut yang bantu naikin dopamine dalam otak supaya kamu tetap fokus dan produktif.
                         </p>
                         <div class="price">Rp 5.000</div>
                         <div class="quantity-selector">
@@ -508,26 +547,28 @@
                             <input type="number" value="1" min="1" class="qty-input">
                             <button onclick="incrementQty(this)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" onclick="addToCart('Cimol Kering Pedas', 5000, this)">Tambah ke Keranjang</button>
+                        <button class="add-to-cart-btn" onclick="addToCart('Si\' Nori', 5000, this)">Tambah ke Keranjang</button>
                     </div>
                 </div>
 
                 <!-- Product 3 -->
                 <div class="product-item">
-                    <div class="product-image">🍯</div>
+                    <div class="product-image">
+                        <img src="etalase_spicy.jpg" alt="Si'Spicy">
+                    </div>
                     <div class="product-content">
-                        <h3>Cimol Kering Manis</h3>
-                        <div class="benefit-tag">✓ Mengurangi Stress</div>
+                        <h3>Si'Spicy</h3>
+                        <div class="benefit-tag">✓ Mengurangi Stress dengan Rasa Pedas, buatmu lebih</div>
                         <p class="product-description">
-                            Cimol kering dengan lapisan rasa manis yang lembut, sempurna untuk mengurangi stres dan menciptakan momen istirahat yang menyenangkan. Kematangan rasa yang pas membuat hati terasa lebih tenang dan segar.
+                            Singkong Crunchy Balls dengan lapisan rasa pedas yang otentik, sempurna untuk mengurangi stres dan menciptakan momen istirahat yang menyenangkan. Kematangan rasa yang pas membuat hati terasa lebih tenang dan segar.
                         </p>
-                        <div class="price">Rp 5.000</div>
+                        <div class="price">Rp 5.500</div>
                         <div class="quantity-selector">
                             <button onclick="decrementQty(this)">−</button>
                             <input type="number" value="1" min="1" class="qty-input">
                             <button onclick="incrementQty(this)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" onclick="addToCart('Cimol Kering Manis', 5000, this)">Tambah ke Keranjang</button>
+                        <button class="add-to-cart-btn" onclick="addToCart('Si\' Spicy', 5500, this)">Tambah ke Keranjang</button>
                     </div>
                 </div>
             </div>
@@ -552,6 +593,9 @@
             <div class="order-form">
                 <h3>📝 Detail Pemesan</h3>
                 
+                <!-- Input Hidden untuk Sales Tracking -->
+                <input type="hidden" id="salesCode" value="">
+                
                 <div class="form-group">
                     <label for="buyerName">Nama Pembeli</label>
                     <input type="text" id="buyerName" placeholder="Masukkan nama Anda" required>
@@ -563,6 +607,7 @@
                         <option value="">-- Pilih Tempat Ambil --</option>
                         <option value="Taman STID">📍 Taman STID</option>
                         <option value="Diantar Kerumahmu (dengan S&K)">🚗 Diantar Kerumahmu (dengan S&K)</option>
+                        <option value="Custom">🎯 Custom</option>
                     </select>
                 </div>
 
@@ -711,11 +756,11 @@
             let total = 0;
             
             cart.forEach(item => {
-                if (item.name === 'Cimol Kering Asin') {
+                if (item.name === 'Si\' Ori') {
                     qtyAsin = item.quantity;
-                } else if (item.name === 'Cimol Kering Pedas') {
+                } else if (item.name === 'Si\' Spicy') {
                     qtyPedas = item.quantity;
-                } else if (item.name === 'Cimol Kering Manis') {
+                } else if (item.name === 'Si\' Sweet') {
                     qtyManis = item.quantity;
                 }
                 total += item.price * item.quantity;
@@ -724,11 +769,15 @@
             // Kirim ke Google Forms
             submitToGoogleForm(buyerName, pickupLocation, pickupDate, paymentMethod, qtyAsin, qtyPedas, qtyManis, total);
 
+            // Ambil sales code
+            const salesCode = document.getElementById('salesCode').value || 'Direct';
+            
             // Buat teks pesanan untuk WhatsApp
-            let message = '*🛍️ PESANAN CIMOL KERING PREMIUM*\n\n';
+            let message = '*🛍️ PESANAN SI DOPA - SINGKONG CRUNCHY BALLS*\n\n';
             
             message += '*👤 DATA PEMESAN:*\n';
             message += `Nama: ${buyerName}\n`;
+            message += `Sales: ${salesCode}\n`;
             message += `Tempat Ambil: ${pickupLocation}\n`;
             
             // Format tanggal dengan nama hari
@@ -755,13 +804,16 @@
             const encodedMessage = encodeURIComponent(message);
 
             // Buka WhatsApp
-            const whatsappNumber = '62895604919010'; // Ganti dengan nomor Anda tanpa + dan spasi
+            const whatsappNumber = '6283170951060'; // Ganti dengan nomor Anda tanpa + dan spasi
             window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
         }
 
         function submitToGoogleForm(nama, lokasi, tanggal, metode, qtyAsin, qtyPedas, qtyManis, total) {
             // Google Form ID
-            const formId = '1FAIpQLSeDVnEzdZpBGgj3Rds39SQZOCXWox_vuA6g7-okAjvNPJ__9A';
+            const formId = '1712031817';
+            
+            // Ambil sales code dari input hidden
+            const salesCode = document.getElementById('salesCode').value || 'Direct';
             
             // Entry IDs untuk setiap field di Google Form
             const formData = new FormData();
@@ -771,10 +823,11 @@
             formData.append('entry.269585913', lokasi);                 // Tempat Ambil
             formData.append('entry.894911535', tanggal);                // Tanggal Pengambilan
             formData.append('entry.1323778650', metode);                // Metode Pembayaran
-            formData.append('entry.168921694', qtyAsin);                // Qty Cimol Kering Asin
-            formData.append('entry.1437324933', qtyPedas);              // Qty Cimol Kering Pedas
-            formData.append('entry.1514945499', qtyManis);              // Qty Cimol Kering Manis
+            formData.append('entry.168921694', qtyAsin);                // Qty Si' Ori
+            formData.append('entry.1437324933', qtyPedas);              // Qty Si' Spicy
+            formData.append('entry.1514945499', qtyManis);              // Qty Si' Sweet
             formData.append('entry.560903875', total);                  // Total
+            formData.append('entry.XXXXXXXXX', salesCode);              // Sales Code (GANTI dengan entry ID)
             
             // URL endpoint Google Form
             const url = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
@@ -793,10 +846,23 @@
             });
         }
 
+        // Fungsi untuk membaca URL parameter
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
         // Set min date untuk date input (hari ini)
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('pickupDate').setAttribute('min', today);
+            
+            // Ambil sales code dari URL parameter
+            const salesCode = getUrlParameter('sales') || getUrlParameter('ref');
+            if (salesCode) {
+                document.getElementById('salesCode').value = salesCode;
+                console.log('Sales Code: ' + salesCode);
+            }
         });
 
         // Initialize
