@@ -752,22 +752,22 @@
             }
 
             // Hitung kuantitas per produk
-            let qtyAsin = 0, qtyPedas = 0, qtyManis = 0;
+            let qtyOri = 0, qtyNori = 0, qtySpicy = 0;
             let total = 0;
             
             cart.forEach(item => {
                 if (item.name === 'Si\' Ori') {
-                    qtyAsin = item.quantity;
+                    qtyOri = item.quantity;
+                } else if (item.name === 'Si\' Nori') {
+                    qtyNori = item.quantity;
                 } else if (item.name === 'Si\' Spicy') {
-                    qtyPedas = item.quantity;
-                } else if (item.name === 'Si\' Sweet') {
-                    qtyManis = item.quantity;
+                    qtySpicy = item.quantity;
                 }
                 total += item.price * item.quantity;
             });
 
             // Kirim ke Google Forms
-            submitToGoogleForm(buyerName, pickupLocation, pickupDate, paymentMethod, qtyAsin, qtyPedas, qtyManis, total);
+            submitToGoogleForm(buyerName, pickupLocation, pickupDate, paymentMethod, qtyOri, qtyNori, qtySpicy, total);
 
             // Ambil sales code
             const salesCode = document.getElementById('salesCode').value || 'Direct';
@@ -808,9 +808,9 @@
             window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
         }
 
-        function submitToGoogleForm(nama, lokasi, tanggal, metode, qtyAsin, qtyPedas, qtyManis, total) {
-            // Google Form ID
-            const formId = '1712031817';
+        function submitToGoogleForm(nama, lokasi, tanggal, metode, qtyOri, qtyNori, qtySpicy, total) {
+            // Google Form ID (dari URL form Anda)
+            const formId = '1FAIpQLSeDVnEzdZpBGgj3Rds39SQZOCXWox_vuA6g7-okAjvNPJ__9A';
             
             // Ambil sales code dari input hidden
             const salesCode = document.getElementById('salesCode').value || 'Direct';
@@ -821,13 +821,12 @@
             // Sesuaikan entry ID dengan form Anda
             formData.append('entry.39058957', nama);                    // Nama Pembeli
             formData.append('entry.269585913', lokasi);                 // Tempat Ambil
-            formData.append('entry.894911535', tanggal);                // Tanggal Pengambilan
             formData.append('entry.1323778650', metode);                // Metode Pembayaran
-            formData.append('entry.168921694', qtyAsin);                // Qty Si' Ori
-            formData.append('entry.1437324933', qtyPedas);              // Qty Si' Spicy
-            formData.append('entry.1514945499', qtyManis);              // Qty Si' Sweet
+            formData.append('entry.168921694', qtyOri);                 // Qty Si' Ori
+            formData.append('entry.1437324933', qtyNori);               // Qty Si' Nori
+            formData.append('entry.1514945499', qtySpicy);              // Qty Si' Spicy
             formData.append('entry.560903875', total);                  // Total
-            formData.append('entry.XXXXXXXXX', salesCode);              // Sales Code (GANTI dengan entry ID)
+            formData.append('entry.1712031817', salesCode);             // Sales Code
             
             // URL endpoint Google Form
             const url = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
@@ -839,10 +838,11 @@
                 mode: 'no-cors'
             })
             .then(() => {
-                console.log('Data berhasil dikirim ke Google Forms');
+                console.log('✅ Data berhasil dikirim ke Google Forms!');
+                alert('✅ Pesanan berhasil dikirim ke sistem!');
             })
             .catch(error => {
-                console.error('Error mengirim ke Google Forms:', error);
+                console.error('❌ Error mengirim ke Google Forms:', error);
             });
         }
 
