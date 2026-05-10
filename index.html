@@ -56,6 +56,25 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 0;
+            }
+            header h1 {
+                height: 100px;
+                font-size: 1.5em;
+            }
+            header h1 img {
+                width: 160px;
+                height: 160px;
+                margin: 0 auto -28px;
+            }
+            header p {
+                font-size: 0.85em;
+                padding: 0 10px;
+            }
+        }
+
         .hero {
             background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url('background awal.jpg') no-repeat center center;
             background-size: cover;
@@ -74,6 +93,22 @@
         .hero p {
             font-size: 1.2em;
             margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 30px 12px;
+                margin-bottom: 25px;
+                background-attachment: scroll;
+            }
+            .hero h2 {
+                font-size: 1.3em;
+                margin-bottom: 8px;
+            }
+            .hero p {
+                font-size: 0.9em;
+                margin-bottom: 3px;
+            }
         }
 
         .container {
@@ -449,13 +484,12 @@
 
         @media (max-width: 1024px) {
             .container {
-                flex-direction: column;
+                gap: 15px;
             }
 
             .cart-sidebar {
-                width: 100%;
-                position: relative;
-                top: 0;
+                width: 300px;
+                padding: 20px;
             }
 
             .product-item {
@@ -471,21 +505,144 @@
             }
         }
 
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 1.8em;
+        @media (max-width: 768px) {
+            .container {
+                gap: 12px;
+                padding: 0 10px;
+                margin-bottom: 25px;
             }
 
-            .hero h2 {
-                font-size: 1.3em;
-            }
-
-            .product-content {
-                padding: 20px;
+            .products-section {
+                flex: 1;
             }
 
             .cart-sidebar {
-                padding: 20px;
+                width: 260px;
+                padding: 15px;
+                top: 10px;
+            }
+
+            .cart-sidebar h2 {
+                font-size: 1.1em;
+                margin-bottom: 12px;
+            }
+
+            .cart-items {
+                max-height: 300px;
+                margin-bottom: 12px;
+            }
+
+            .cart-item {
+                font-size: 0.8em;
+                padding: 8px;
+                margin-bottom: 8px;
+            }
+
+            .product-item {
+                gap: 0;
+            }
+
+            .product-image {
+                min-height: 200px;
+            }
+
+            .product-content {
+                padding: 15px;
+            }
+
+            .product-content h3 {
+                font-size: 1.3em;
+                margin-bottom: 8px;
+            }
+
+            .product-description {
+                font-size: 0.85em;
+                margin-bottom: 12px;
+                line-height: 1.5;
+            }
+
+            .benefit-tag {
+                font-size: 0.8em;
+                padding: 6px 12px;
+                margin-bottom: 12px;
+            }
+
+            .price {
+                font-size: 1.1em;
+                margin-bottom: 12px;
+            }
+
+            .quantity-selector button {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9em;
+            }
+
+            .quantity-selector input {
+                width: 50px;
+                font-size: 0.9em;
+            }
+
+            .add-to-cart-btn {
+                font-size: 0.9em;
+                padding: 10px 15px;
+            }
+
+            .order-form {
+                margin-top: 15px;
+                padding-top: 15px;
+            }
+
+            .order-form h3 {
+                font-size: 0.95em;
+                margin-bottom: 12px;
+            }
+
+            .form-group {
+                margin-bottom: 10px;
+            }
+
+            .form-group label {
+                font-size: 0.8em;
+                margin-bottom: 4px;
+            }
+
+            .form-group input,
+            .form-group select {
+                font-size: 0.85em;
+                padding: 8px 10px;
+            }
+
+            .summary-row {
+                font-size: 0.85em;
+                margin-bottom: 8px;
+            }
+
+            .summary-row.total {
+                font-size: 1em;
+            }
+
+            .checkout-btn {
+                font-size: 0.95em;
+                padding: 12px;
+                margin-top: 12px;
+            }
+
+            .checkout-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                gap: 10px;
+                padding: 0 8px;
+            }
+
+            .cart-sidebar {
+                width: 240px;
+                padding: 12px;
             }
         }
     </style>
@@ -815,12 +972,13 @@
             // Ambil sales code dari input hidden
             const salesCode = document.getElementById('salesCode').value || 'Direct';
             
-            // Entry IDs untuk setiap field di Google Form
+            // Entry IDs untuk setiap field di Google Form - INTEGRASI ULANG LENGKAP
             const formData = new FormData();
             
-            // Sesuaikan entry ID dengan form Anda
+            // Integrasi dengan entry IDs yang benar sesuai Google Form
             formData.append('entry.39058957', nama);                    // Nama Pembeli
             formData.append('entry.269585913', lokasi);                 // Tempat Ambil
+            formData.append('entry.894911535', tanggal);                // Tanggal Pengambilan (format: YYYY-MM-DD)
             formData.append('entry.1323778650', metode);                // Metode Pembayaran
             formData.append('entry.168921694', qtyOri);                 // Qty Si' Ori
             formData.append('entry.1437324933', qtyNori);               // Qty Si' Nori
@@ -838,7 +996,17 @@
                 mode: 'no-cors'
             })
             .then(() => {
-                console.log('✅ Data berhasil dikirim ke Google Forms!');
+                console.log('✅ INTEGRASI BERHASIL!');
+                console.log('✅ Data yang dikirim:');
+                console.log('  - Nama Pembeli: ' + nama);
+                console.log('  - Tempat Ambil: ' + lokasi);
+                console.log('  - Tanggal Pengambilan: ' + tanggal);
+                console.log('  - Metode Pembayaran: ' + metode);
+                console.log('  - Si\' Ori: ' + qtyOri + ' pcs');
+                console.log('  - Si\' Nori: ' + qtyNori + ' pcs');
+                console.log('  - Si\' Spicy: ' + qtySpicy + ' pcs');
+                console.log('  - Total: Rp ' + total);
+                console.log('  - Sales Code: ' + salesCode);
                 alert('✅ Pesanan berhasil dikirim ke sistem!');
             })
             .catch(error => {
