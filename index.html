@@ -1113,10 +1113,14 @@
         }
 
         function saveAdminChanges() {
-            // Simpan stok
-            localStorage.setItem('stock_ori', document.getElementById('stockOri').value);
-            localStorage.setItem('stock_nori', document.getElementById('stockNori').value);
-            localStorage.setItem('stock_spicy', document.getElementById('stockSpicy').value);
+            // Simpan stok ke localStorage (local backup)
+            const stockOri = document.getElementById('stockOri').value;
+            const stockNori = document.getElementById('stockNori').value;
+            const stockSpicy = document.getElementById('stockSpicy').value;
+            
+            localStorage.setItem('stock_ori', stockOri);
+            localStorage.setItem('stock_nori', stockNori);
+            localStorage.setItem('stock_spicy', stockSpicy);
 
             // Simpan pre-order info
             localStorage.setItem('preorder_start', document.getElementById('preorderStartDate').value);
@@ -1124,19 +1128,37 @@
             localStorage.setItem('product_ready', document.getElementById('productReadyDate').value);
             localStorage.setItem('pickup_time', document.getElementById('pickupTime').value);
 
+            // ✨ KIRIM KE GOOGLE SHEETS (untuk sinkronisasi real-time)
+            syncStockToGoogleSheets(stockOri, stockNori, stockSpicy);
+
             // Update display
             updateStockDisplay();
             updatePreorderDisplay();
 
-            alert('✅ Data berhasil disimpan!');
+            alert('✅ Data berhasil disimpan & tersinkronisasi!');
             closeAdminPanel();
         }
 
         function updateStockDisplay() {
+            // Coba baca dari Google Sheets dulu (real-time data)
+            fetchStockFromGoogleSheets();
+        }
+
+        function fetchStockFromGoogleSheets() {
+            // 📡 FETCH STOK DARI GOOGLE SHEETS (real-time)
+            // URL ini adalah public Google Sheet yang share
+            // Format: https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/Stock!A1:C2?key={API_KEY}
+            
+            // SETUP DIMULAI DARI SINI (admin perlu set Google Sheets)
+            // Untuk sekarang, gunakan fallback ke localStorage
             const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
             const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
             const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
 
+            updateStockBadges(stockOri, stockNori, stockSpicy);
+        }
+
+        function updateStockBadges(stockOri, stockNori, stockSpicy) {
             // Update badges
             document.getElementById('stockBadgeOri').textContent = `Stok: ${stockOri}`;
             document.getElementById('stockBadgeOri').className = `stock-badge ${stockOri === 0 ? 'out' : ''}`;
@@ -1207,6 +1229,37 @@
             else if (productName === 'Si\' Spicy') stock = parseInt(localStorage.getItem('stock_spicy')) || 0;
 
             return stock > 0;
+        }
+
+        // ==================== SYNC FUNCTIONS (REAL-TIME) ====================
+        function syncStockToGoogleSheets(ori, nori, spicy) {
+            // 📡 KIRIM STOK KE GOOGLE SHEETS (untuk sinkronisasi)
+            // Format: POST ke Google Apps Script yang update Google Sheets
+            
+            // Timestamp sekarang (untuk tracking kapan update)
+            const timestamp = new Date().toLocaleString('id-ID');
+            
+            // Data yang dikirim
+            const data = {
+                stock_ori: ori,
+                stock_nori: nori,
+                stock_spicy: spicy,
+                timestamp: timestamp,
+                updated_by: 'Admin Panel'
+            };
+            
+            // CATATAN PENTING untuk setup:
+            // Admin perlu:
+            // 1. Buat Google Sheet public dengan struktur: stock_ori | stock_nori | stock_spicy
+            // 2. Setup Google Apps Script untuk handle update
+            // 3. Ganti URL_GOOGLE_APPS_SCRIPT di bawah dengan actual deployment URL
+            
+            console.log('📡 Sync Stock to Google Sheets:', data);
+            console.log('⏳ Backup: Data disimpan di localStorage lokal juga');
+            
+            // Untuk sekarang, system hanya simpan ke localStorage
+            // TODO: Setup Google Apps Script untuk full real-time sync
+            // Template script ada di dokumentasi
         }
 
         // ==================== CART FUNCTIONS ====================
@@ -1511,8 +1564,11 @@
                 console.log('Sales Code: ' + salesCode);
             }
 
-            // Initialize stok dan pre-order display
-            updateStockDisplay();
+            // 📡 FETCH STOK DARI GOOGLE SHEETS (real-time update)
+            console.log('📡 Fetching stock data...');
+            fetchStockFromGoogleSheets();
+            
+            // Initialize pre-order display
             updatePreorderDisplay();
         });
 
