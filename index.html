@@ -648,20 +648,287 @@
                 padding: 12px;
             }
         }
+        /* Admin Panel Styling */
+        .admin-panel-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .admin-panel-overlay.active {
+            display: flex;
+        }
+
+        .admin-panel-modal {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .admin-panel-modal h2 {
+            color: #FF6F00;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #FF9800;
+            padding-bottom: 10px;
+        }
+
+        .admin-form-group {
+            margin-bottom: 15px;
+        }
+
+        .admin-form-group label {
+            display: block;
+            color: #FF6F00;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .admin-form-group input,
+        .admin-form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #FFE0B2;
+            border-radius: 8px;
+            font-size: 0.95em;
+            background: white;
+            color: #333;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .admin-form-group input:focus,
+        .admin-form-group select:focus {
+            outline: none;
+            border-color: #FF9800;
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .admin-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn-save {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .admin-btn-save:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.3);
+        }
+
+        .admin-btn-close {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .admin-btn-close:hover {
+            background: #d0d0d0;
+        }
+
+        .stock-badge {
+            display: inline-block;
+            background: #11998e;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .stock-badge.out {
+            background: #ff6b6b;
+        }
+
+        /* Pre Order Info Box */
+        .preorder-info-box {
+            background: white;
+            border: 3px solid #FF9800;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(255,152,0,0.1);
+        }
+
+        .preorder-info-box h3 {
+            color: #FF6F00;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .preorder-info-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .preorder-info-item {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .preorder-info-item label {
+            display: block;
+            color: #FF9800;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .preorder-info-item value {
+            display: block;
+            color: #333;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .admin-access-hint {
+            font-size: 0.8em;
+            color: #ccc;
+            cursor: pointer;
+            user-select: none;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .preorder-info-box {
+                margin: 15px 10px;
+                padding: 15px;
+            }
+
+            .preorder-info-item {
+                min-width: 120px;
+            }
+
+            .admin-panel-modal {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Admin Panel Overlay -->
+    <div class="admin-panel-overlay" id="adminPanelOverlay">
+        <div class="admin-panel-modal">
+            <h2 id="adminPanelTitle">Admin Panel</h2>
+            
+            <!-- Tab untuk switch antara Stok dan Pre Order -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #FFE0B2; padding-bottom: 10px;">
+                <button onclick="switchAdminTab('stock')" id="tabStockBtn" style="flex: 1; padding: 10px; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📦 Stok</button>
+                <button onclick="switchAdminTab('preorder')" id="tabPreorderBtn" style="flex: 1; padding: 10px; background: #FFE0B2; color: #FF6F00; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📅 Pre Order</button>
+            </div>
+
+            <!-- Stok Panel -->
+            <div id="stockPanel">
+                <div class="admin-form-group">
+                    <label>Si' Ori (Rp 5.000)</label>
+                    <input type="number" id="stockOri" min="0" value="0">
+                    <div style="font-size: 0.85em; color: #666; margin-top: 3px;">Stok saat ini</div>
+                </div>
+                <div class="admin-form-group">
+                    <label>Si' Nori (Rp 5.000)</label>
+                    <input type="number" id="stockNori" min="0" value="0">
+                    <div style="font-size: 0.85em; color: #666; margin-top: 3px;">Stok saat ini</div>
+                </div>
+                <div class="admin-form-group">
+                    <label>Si' Spicy (Rp 5.500)</label>
+                    <input type="number" id="stockSpicy" min="0" value="0">
+                    <div style="font-size: 0.85em; color: #666; margin-top: 3px;">Stok saat ini</div>
+                </div>
+            </div>
+
+            <!-- Pre Order Panel -->
+            <div id="preorderPanel" style="display: none;">
+                <div class="admin-form-group">
+                    <label>Tanggal Pre Order Dimulai</label>
+                    <input type="date" id="preorderStartDate">
+                </div>
+                <div class="admin-form-group">
+                    <label>Tanggal Pre Order Berakhir</label>
+                    <input type="date" id="preorderEndDate">
+                </div>
+                <div class="admin-form-group">
+                    <label>Tanggal Produk Ready</label>
+                    <input type="date" id="productReadyDate">
+                </div>
+                <div class="admin-form-group">
+                    <label>Jam Ambil (format: HH:MM)</label>
+                    <input type="time" id="pickupTime">
+                </div>
+            </div>
+
+            <div class="admin-buttons">
+                <button class="admin-btn admin-btn-save" onclick="saveAdminChanges()">💾 Simpan</button>
+                <button class="admin-btn admin-btn-close" onclick="closeAdminPanel()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header>
         <h1><img src="sidopa.png" alt="Si Dopa"></h1>
-        <p>Camilan Enak, Murah, Banyak untuk temani Belajar atau Bekerja</p>
+        <p>🌕🌕Camilan crunchy berbentuk bola-bola yang diolah dari bahan baku singkong dan campuran tepung kanji dengan bumbu tabur yang bantu naikkan mood🌕🌕 <p>
+            <p>👇</p>
+        </p>Camilan Enak, Murah, Banyak untuk temani Belajar atau Bekerja👩‍💻</p>
     </header>
 
     <!-- Hero Section -->
     <div class="hero">
         <h2>✨Bukan hanya sekedar camilan, tapi teman produktif yang menyenangkan✨</h2>
         <p>✅Si Dopa akan memberikan pengalaman lawan jenuh dan stressnya bekerja atau belajar melalui teksturnya yang renyah </p>
-        <p>✅Sensasi varian rasa yang buat kamu kembali fokus dan enjoy dengan aktivtasmu</p>
+        <p>✅Sensasi varian rasa yang buat kamu kembali fokus dan enjoy dengan aktivitasmu</p>
+    </div>
+
+    <!-- Pre Order Info Box -->
+    <div class="preorder-info-box" id="preorderInfoBox">
+        <h3>📅 Informasi Pre Order Si Dopa</h3>
+        <div class="preorder-info-row">
+            <div class="preorder-info-item">
+                <label>Periode Pre Order</label>
+                <value id="displayPreorderPeriod">-</value>
+            </div>
+            <div class="preorder-info-item">
+                <label>Tanggal Ready Produk</label>
+                <value id="displayProductReady">-</value>
+            </div>
+            <div class="preorder-info-item">
+                <label>Jam Ambil</label>
+                <value id="displayPickupTime">-</value>
+            </div>
+        </div>
+        <div class="admin-access-hint" onclick="promptAdminPassword()">🔐 Admin Access</div>
     </div>
 
     <!-- Main Container -->
@@ -677,6 +944,7 @@
                     <div class="product-content">
                         <h3>Si' Ori</h3>
                         <div class="benefit-tag">✓ Menghilangkan Bosan dengan Renyahnya Tekstur Original🤩</div>
+                        <div class="stock-badge" id="stockBadgeOri">Stok: 0</div>
                         <p class="product-description">
                         </p>
                         <div class="price">Rp 5.000</div>
@@ -685,7 +953,7 @@
                             <input type="number" value="1" min="1" class="qty-input">
                             <button onclick="incrementQty(this)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" onclick="addToCart('Si\' Ori', 5000, this)">Tambah ke Keranjang</button>
+                        <button class="add-to-cart-btn" id="addBtnOri" onclick="addToCart('Si\' Ori', 5000, this)">Tambah ke Keranjang</button>
                     </div>
                 </div>
 
@@ -696,7 +964,8 @@
                     </div>
                     <div class="product-content">
                         <h3>Si' Nori</h3>
-                        <div class="benefit-tag">✓ Mengatasi Bosan dengan Rasa Rumput Laut🧐</div>
+                        <div class="benefit-tag">✓ Mengatasi Bosan dari Rasa Rumput Laut yang gurih🧐</div>
+                        <div class="stock-badge" id="stockBadgeNori">Stok: 0</div>
                         <p class="product-description">
                         </p>
                         <div class="price">Rp 5.000</div>
@@ -705,7 +974,7 @@
                             <input type="number" value="1" min="1" class="qty-input">
                             <button onclick="incrementQty(this)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" onclick="addToCart('Si\' Nori', 5000, this)">Tambah ke Keranjang</button>
+                        <button class="add-to-cart-btn" id="addBtnNori" onclick="addToCart('Si\' Nori', 5000, this)">Tambah ke Keranjang</button>
                     </div>
                 </div>
 
@@ -717,6 +986,7 @@
                     <div class="product-content">
                         <h3>Si'Spicy</h3>
                         <div class="benefit-tag">✓ Mengurangi Stress dengan Rasa Pedas🔥, buatmu kamu kembali refresh ditengah tekanan🙂‍↔️</div>
+                        <div class="stock-badge" id="stockBadgeSpicy">Stok: 0</div>
                         <p class="product-description">
                         </p>
                         <div class="price">Rp 5.500</div>
@@ -725,7 +995,7 @@
                             <input type="number" value="1" min="1" class="qty-input">
                             <button onclick="incrementQty(this)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" onclick="addToCart('Si\' Spicy', 5500, this)">Tambah ke Keranjang</button>
+                        <button class="add-to-cart-btn" id="addBtnSpicy" onclick="addToCart('Si\' Spicy', 5500, this)">Tambah ke Keranjang</button>
                     </div>
                 </div>
             </div>
@@ -795,7 +1065,151 @@
 
     <script>
         let cart = [];
+        let lastSubmitTime = 0; // Untuk mencegah double submit
+        let pendingSubmit = null; // Untuk track pending submission
 
+        // ==================== ADMIN FUNCTIONS ====================
+        function promptAdminPassword() {
+            const password = prompt('🔐 Masukkan password admin:');
+            if (password === 'sidopa2026') {
+                openAdminPanel();
+            } else if (password !== null) {
+                alert('❌ Password salah!');
+            }
+        }
+
+        function openAdminPanel() {
+            const overlay = document.getElementById('adminPanelOverlay');
+            overlay.classList.add('active');
+            loadAdminData();
+        }
+
+        function closeAdminPanel() {
+            const overlay = document.getElementById('adminPanelOverlay');
+            overlay.classList.remove('active');
+        }
+
+        function switchAdminTab(tab) {
+            document.getElementById('stockPanel').style.display = tab === 'stock' ? 'block' : 'none';
+            document.getElementById('preorderPanel').style.display = tab === 'preorder' ? 'block' : 'none';
+            
+            document.getElementById('tabStockBtn').style.background = tab === 'stock' ? '#FF9800' : '#FFE0B2';
+            document.getElementById('tabStockBtn').style.color = tab === 'stock' ? 'white' : '#FF6F00';
+            document.getElementById('tabPreorderBtn').style.background = tab === 'preorder' ? '#FF9800' : '#FFE0B2';
+            document.getElementById('tabPreorderBtn').style.color = tab === 'preorder' ? 'white' : '#FF6F00';
+        }
+
+        function loadAdminData() {
+            // Load stok data
+            document.getElementById('stockOri').value = localStorage.getItem('stock_ori') || 0;
+            document.getElementById('stockNori').value = localStorage.getItem('stock_nori') || 0;
+            document.getElementById('stockSpicy').value = localStorage.getItem('stock_spicy') || 0;
+
+            // Load pre-order data
+            document.getElementById('preorderStartDate').value = localStorage.getItem('preorder_start') || '';
+            document.getElementById('preorderEndDate').value = localStorage.getItem('preorder_end') || '';
+            document.getElementById('productReadyDate').value = localStorage.getItem('product_ready') || '';
+            document.getElementById('pickupTime').value = localStorage.getItem('pickup_time') || '';
+        }
+
+        function saveAdminChanges() {
+            // Simpan stok
+            localStorage.setItem('stock_ori', document.getElementById('stockOri').value);
+            localStorage.setItem('stock_nori', document.getElementById('stockNori').value);
+            localStorage.setItem('stock_spicy', document.getElementById('stockSpicy').value);
+
+            // Simpan pre-order info
+            localStorage.setItem('preorder_start', document.getElementById('preorderStartDate').value);
+            localStorage.setItem('preorder_end', document.getElementById('preorderEndDate').value);
+            localStorage.setItem('product_ready', document.getElementById('productReadyDate').value);
+            localStorage.setItem('pickup_time', document.getElementById('pickupTime').value);
+
+            // Update display
+            updateStockDisplay();
+            updatePreorderDisplay();
+
+            alert('✅ Data berhasil disimpan!');
+            closeAdminPanel();
+        }
+
+        function updateStockDisplay() {
+            const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
+            const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
+            const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
+
+            // Update badges
+            document.getElementById('stockBadgeOri').textContent = `Stok: ${stockOri}`;
+            document.getElementById('stockBadgeOri').className = `stock-badge ${stockOri === 0 ? 'out' : ''}`;
+
+            document.getElementById('stockBadgeNori').textContent = `Stok: ${stockNori}`;
+            document.getElementById('stockBadgeNori').className = `stock-badge ${stockNori === 0 ? 'out' : ''}`;
+
+            document.getElementById('stockBadgeSpicy').textContent = `Stok: ${stockSpicy}`;
+            document.getElementById('stockBadgeSpicy').className = `stock-badge ${stockSpicy === 0 ? 'out' : ''}`;
+
+            // Update button state
+            updateAddButtonState('Si\' Ori', stockOri);
+            updateAddButtonState('Si\' Nori', stockNori);
+            updateAddButtonState('Si\' Spicy', stockSpicy);
+        }
+
+        function updateAddButtonState(productName, stock) {
+            let btnId = '';
+            if (productName === 'Si\' Ori') btnId = 'addBtnOri';
+            else if (productName === 'Si\' Nori') btnId = 'addBtnNori';
+            else if (productName === 'Si\' Spicy') btnId = 'addBtnSpicy';
+
+            const btn = document.getElementById(btnId);
+            if (stock === 0) {
+                btn.disabled = true;
+                btn.textContent = '❌ Stok Habis';
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Tambah ke Keranjang';
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            }
+        }
+
+        function updatePreorderDisplay() {
+            const startDate = localStorage.getItem('preorder_start');
+            const endDate = localStorage.getItem('preorder_end');
+            const readyDate = localStorage.getItem('product_ready');
+            const pickupTime = localStorage.getItem('pickup_time');
+
+            // Format tanggal
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '-';
+                const date = new Date(dateStr + 'T00:00:00');
+                return date.toLocaleDateString('id-ID', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+            };
+
+            const formatTime = (timeStr) => {
+                return timeStr || '-';
+            };
+
+            const periodText = (startDate && endDate) 
+                ? `${formatDate(startDate)} s/d ${formatDate(endDate)}`
+                : '-';
+
+            document.getElementById('displayPreorderPeriod').textContent = periodText;
+            document.getElementById('displayProductReady').textContent = formatDate(readyDate);
+            document.getElementById('displayPickupTime').textContent = formatTime(pickupTime);
+        }
+
+        // ==================== STOK VALIDATION ====================
+        function validateStockBeforeAddToCart(productName) {
+            let stock = 0;
+            if (productName === 'Si\' Ori') stock = parseInt(localStorage.getItem('stock_ori')) || 0;
+            else if (productName === 'Si\' Nori') stock = parseInt(localStorage.getItem('stock_nori')) || 0;
+            else if (productName === 'Si\' Spicy') stock = parseInt(localStorage.getItem('stock_spicy')) || 0;
+
+            return stock > 0;
+        }
+
+        // ==================== CART FUNCTIONS ====================
         function incrementQty(button) {
             const input = button.previousElementSibling;
             input.value = parseInt(input.value) + 1;
@@ -809,10 +1223,15 @@
         }
 
         function addToCart(productName, price, button) {
+            // Validasi stok
+            if (!validateStockBeforeAddToCart(productName)) {
+                alert('❌ Produk ini sedang tidak tersedia!');
+                return;
+            }
+
             const quantityInput = button.previousElementSibling.querySelector('.qty-input');
             const quantity = parseInt(quantityInput.value);
 
-            // Cek apakah produk sudah ada di keranjang
             const existingItem = cart.find(item => item.name === productName);
 
             if (existingItem) {
@@ -825,10 +1244,7 @@
                 });
             }
 
-            // Reset quantity input
             quantityInput.value = 1;
-
-            // Update tampilan keranjang
             updateCart();
         }
 
@@ -870,22 +1286,45 @@
 
         function updateSummary() {
             let total = 0;
-
             cart.forEach(item => {
                 total += item.price * item.quantity;
             });
-
             document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
         }
 
+        // ==================== ANTI DOUBLE ENTRY SYSTEM ====================
+        function generateOrderId(buyerName, pickupDate, paymentMethod) {
+            // Generate ID unik berdasarkan nama, tanggal, metode pembayaran
+            return `${buyerName}_${pickupDate}_${paymentMethod}`;
+        }
+
+        function isOrderAlreadySubmitted(orderId) {
+            const submittedOrders = JSON.parse(localStorage.getItem('submitted_orders')) || {};
+            const currentTime = Date.now();
+            
+            if (submittedOrders[orderId]) {
+                const timeDiff = currentTime - submittedOrders[orderId];
+                // Jika sudah submit dalam 5 detik terakhir, tolak
+                if (timeDiff < 5000) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function markOrderAsSubmitted(orderId) {
+            const submittedOrders = JSON.parse(localStorage.getItem('submitted_orders')) || {};
+            submittedOrders[orderId] = Date.now();
+            localStorage.setItem('submitted_orders', JSON.stringify(submittedOrders));
+        }
+
+        // ==================== WHATSAPP & GOOGLE FORMS ====================
         function openWhatsApp() {
-            // Validasi keranjang
             if (cart.length === 0) {
                 alert('Keranjang Anda kosong!');
                 return;
             }
 
-            // Validasi form
             const buyerName = document.getElementById('buyerName').value.trim();
             const pickupLocation = document.getElementById('pickupLocation').value;
             const pickupDate = document.getElementById('pickupDate').value;
@@ -908,6 +1347,13 @@
                 return;
             }
 
+            // Cek anti-double-entry
+            const orderId = generateOrderId(buyerName, pickupDate, paymentMethod);
+            if (isOrderAlreadySubmitted(orderId)) {
+                alert('⏱️ Pesanan ini sudah dikirim baru-baru ini. Silakan tunggu beberapa detik sebelum mengirim ulang.');
+                return;
+            }
+
             // Hitung kuantitas per produk
             let qtyOri = 0, qtyNori = 0, qtySpicy = 0;
             let total = 0;
@@ -923,9 +1369,6 @@
                 total += item.price * item.quantity;
             });
 
-            // Kirim ke Google Forms
-            submitToGoogleForm(buyerName, pickupLocation, pickupDate, paymentMethod, qtyOri, qtyNori, qtySpicy, total);
-
             // Ambil sales code
             const salesCode = document.getElementById('salesCode').value || 'Direct';
             
@@ -937,7 +1380,6 @@
             message += `Sales: ${salesCode}\n`;
             message += `Tempat Ambil: ${pickupLocation}\n`;
             
-            // Format tanggal dengan nama hari
             const dateObj = new Date(pickupDate + 'T00:00:00');
             const hariOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const tanggalFormatted = dateObj.toLocaleDateString('id-ID', hariOptions);
@@ -957,46 +1399,76 @@
             message += '*━━━━━━━━━━━━━━━━*\n\n';
             message += 'Terima kasih telah memesan! 🙏';
 
-            // Encode untuk URL
             const encodedMessage = encodeURIComponent(message);
+            const whatsappNumber = '6283170951060';
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
 
-            // Buka WhatsApp
-            const whatsappNumber = '6283170951060'; // Ganti dengan nomor Anda tanpa + dan spasi
-            window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
+            // PENTING: Simpan data sebelum membuka WhatsApp
+            pendingSubmit = {
+                buyerName: buyerName,
+                pickupLocation: pickupLocation,
+                pickupDate: pickupDate,
+                paymentMethod: paymentMethod,
+                qtyOri: qtyOri,
+                qtyNori: qtyNori,
+                qtySpicy: qtySpicy,
+                total: total,
+                salesCode: salesCode,
+                orderId: orderId
+            };
+
+            // Open WhatsApp
+            const whatsappWindow = window.open(whatsappUrl, '_blank');
+
+            // Cek apakah window berhasil dibuka
+            if (whatsappWindow) {
+                // Setelah window dibuka, submit ke Google Forms
+                // Gunakan timeout untuk memastikan WhatsApp API sudah respond
+                setTimeout(() => {
+                    submitToGoogleForm(
+                        pendingSubmit.buyerName,
+                        pendingSubmit.pickupLocation,
+                        pendingSubmit.pickupDate,
+                        pendingSubmit.paymentMethod,
+                        pendingSubmit.qtyOri,
+                        pendingSubmit.qtyNori,
+                        pendingSubmit.qtySpicy,
+                        pendingSubmit.total,
+                        pendingSubmit.salesCode,
+                        pendingSubmit.orderId
+                    );
+                }, 100);
+            } else {
+                alert('❌ Tidak bisa membuka WhatsApp. Pastikan browser Anda mengizinkan popup atau install aplikasi WhatsApp.');
+            }
         }
 
-        function submitToGoogleForm(nama, lokasi, tanggal, metode, qtyOri, qtyNori, qtySpicy, total) {
-            // Google Form ID (dari URL form Anda)
+        function submitToGoogleForm(nama, lokasi, tanggal, metode, qtyOri, qtyNori, qtySpicy, total, salesCode, orderId) {
             const formId = '1FAIpQLSeDVnEzdZpBGgj3Rds39SQZOCXWox_vuA6g7-okAjvNPJ__9A';
             
-            // Ambil sales code dari input hidden
-            const salesCode = document.getElementById('salesCode').value || 'Direct';
-            
-            // Entry IDs untuk setiap field di Google Form - INTEGRASI ULANG LENGKAP
             const formData = new FormData();
+            formData.append('entry.39058957', nama);
+            formData.append('entry.269585913', lokasi);
+            formData.append('entry.894911535', tanggal);
+            formData.append('entry.1323778650', metode);
+            formData.append('entry.168921694', qtyOri);
+            formData.append('entry.1437324933', qtyNori);
+            formData.append('entry.1514945499', qtySpicy);
+            formData.append('entry.560903875', total);
+            formData.append('entry.1712031817', salesCode);
             
-            // Integrasi dengan entry IDs yang benar sesuai Google Form
-            formData.append('entry.39058957', nama);                    // Nama Pembeli
-            formData.append('entry.269585913', lokasi);                 // Tempat Ambil
-            formData.append('entry.894911535', tanggal);                // Tanggal Pengambilan (format: YYYY-MM-DD)
-            formData.append('entry.1323778650', metode);                // Metode Pembayaran
-            formData.append('entry.168921694', qtyOri);                 // Qty Si' Ori
-            formData.append('entry.1437324933', qtyNori);               // Qty Si' Nori
-            formData.append('entry.1514945499', qtySpicy);              // Qty Si' Spicy
-            formData.append('entry.560903875', total);                  // Total
-            formData.append('entry.1712031817', salesCode);             // Sales Code
-            
-            // URL endpoint Google Form
             const url = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
             
-            // Kirim data dengan fetch
             fetch(url, {
                 method: 'POST',
                 body: formData,
                 mode: 'no-cors'
             })
             .then(() => {
-                console.log('✅ INTEGRASI BERHASIL!');
+                // Mark sebagai submitted untuk anti-double-entry
+                markOrderAsSubmitted(orderId);
+                
+                console.log('✅ PESANAN BERHASIL MASUK KE SISTEM!');
                 console.log('✅ Data yang dikirim:');
                 console.log('  - Nama Pembeli: ' + nama);
                 console.log('  - Tempat Ambil: ' + lokasi);
@@ -1007,33 +1479,43 @@
                 console.log('  - Si\' Spicy: ' + qtySpicy + ' pcs');
                 console.log('  - Total: Rp ' + total);
                 console.log('  - Sales Code: ' + salesCode);
-                alert('✅ Pesanan berhasil dikirim ke sistem!');
+                
+                // Clear cart after successful submission
+                cart = [];
+                updateCart();
+                document.getElementById('buyerName').value = '';
+                document.getElementById('pickupLocation').value = '';
+                document.getElementById('pickupDate').value = '';
+                document.getElementById('paymentMethod').value = '';
+                
+                alert('✅ Pesanan berhasil dikirim! Silakan melanjutkan di WhatsApp untuk konfirmasi pembayaran.');
             })
             .catch(error => {
                 console.error('❌ Error mengirim ke Google Forms:', error);
             });
         }
 
-        // Fungsi untuk membaca URL parameter
+        // ==================== INITIALIZATION ====================
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
 
-        // Set min date untuk date input (hari ini)
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('pickupDate').setAttribute('min', today);
             
-            // Ambil sales code dari URL parameter
             const salesCode = getUrlParameter('sales') || getUrlParameter('ref');
             if (salesCode) {
                 document.getElementById('salesCode').value = salesCode;
                 console.log('Sales Code: ' + salesCode);
             }
+
+            // Initialize stok dan pre-order display
+            updateStockDisplay();
+            updatePreorderDisplay();
         });
 
-        // Initialize
         updateCart();
     </script>
 </body>
