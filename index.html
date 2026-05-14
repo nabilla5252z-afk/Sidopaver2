@@ -837,6 +837,7 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
     <!-- Admin Panel Overlay -->
@@ -1061,9 +1062,62 @@
                 WhatsApp
             </button>
         </aside>
+
+        <div id="tableBody" class=" flex justify-center" style="visibility: hidden;">
+            <p class="text-center py-4 text-gray-500">Loading...</p>
+        </div>
     </div>
 
     <script>
+        async function fetchData() {
+            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const csvText = await res.text();
+                const parsed = Papa.parse(csvText, { header: true });
+                const rows = parsed.data;
+                
+                const tableBody = document.getElementById("tableBody");
+                tableBody.innerHTML = "";
+                
+                rows.forEach((stock, i) => {
+                    if (!stock.name || stock.name.trim() === "") return;
+                    const div = document.createElement("div");
+                    div.className = "border px-4 py-2 text-center bg-white mb-2";
+                    div.textContent = `${stock.name}: ${stock.quantity || 0}`;
+                    tableBody.appendChild(div);
+                });
+                console.log('✅ Data dari Google Sheets loaded successfully');
+            } catch (error) {
+                console.error('❌ Error fetching from Google Sheets:', error);
+                loadLocalData();
+            }
+        }
+
+        function loadLocalData() {
+            const localData = [
+                { name: "Si' Ori", quantity: 10, badgeId: "stockBadgeOri" },
+                { name: "Si' Nori", quantity: 10, badgeId: "stockBadgeNori" },
+                { name: "Si' Spicy", quantity: 10, badgeId: "stockBadgeSpicy" }
+            ];
+            
+            localData.forEach((stock) => {
+                // Update badge dengan stock quantity
+                const badge = document.getElementById(stock.badgeId);
+                if (badge) {
+                    badge.textContent = `Stok: ${stock.quantity}`;
+                    badge.className = stock.quantity === 0 ? 'stock-badge out' : 'stock-badge';
+                }
+                console.log(`✅ ${stock.name} loaded: ${stock.quantity} unit`);
+            });
+            console.log('✅ Stock data updated');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchData();
+        });
+
         let cart = [];
         let lastSubmitTime = 0; // Untuk mencegah double submit
         let pendingSubmit = null; // Untuk track pending submission
@@ -1128,8 +1182,7 @@
             localStorage.setItem('product_ready', document.getElementById('productReadyDate').value);
             localStorage.setItem('pickup_time', document.getElementById('pickupTime').value);
 
-            // ✨ KIRIM KE GOOGLE SHEETS (untuk sinkronisasi real-time)
-            https://script.google.com/macros/s/AKfycbyNiaP6Iw4lcoGpJxBE-B2OudzUCrtwMSiHYfQ3PA1aLsyR1FTW2fuMZJZhZxPkpUat/exec(stockOri, stockNori, stockSpicy);
+            // Data tersimpan di localStorage
 
             // Update display
             updateStockDisplay();
@@ -1229,37 +1282,6 @@
             else if (productName === 'Si\' Spicy') stock = parseInt(localStorage.getItem('stock_spicy')) || 0;
 
             return stock > 0;
-        }
-
-        // ==================== SYNC FUNCTIONS (REAL-TIME) ====================
-        function syncStockToGoogleSheets(ori, nori, spicy) {
-            // 📡 KIRIM STOK KE GOOGLE SHEETS (untuk sinkronisasi)
-            // Format: POST ke Google Apps Script yang update Google Sheets
-            
-            // Timestamp sekarang (untuk tracking kapan update)
-            const timestamp = new Date().toLocaleString('id-ID');
-            
-            // Data yang dikirim
-            const data = {
-                stock_ori: ori,
-                stock_nori: nori,
-                stock_spicy: spicy,
-                timestamp: timestamp,
-                updated_by: 'Admin Panel'
-            };
-            
-            // CATATAN PENTING untuk setup:
-            // Admin perlu:
-            // 1. Buat Google Sheet public dengan struktur: stock_ori | stock_nori | stock_spicy
-            // 2. Setup Google Apps Script untuk handle update
-            // 3. Ganti URL_GOOGLE_APPS_SCRIPT di bawah dengan actual deployment URL
-            
-            console.log('📡 Sync Stock to Google Sheets:', data);
-            console.log('⏳ Backup: Data disimpan di localStorage lokal juga');
-            
-            // Untuk sekarang, system hanya simpan ke localStorage
-            // TODO: Setup Google Apps Script untuk full real-time sync
-            // Template script ada di dokumentasi
         }
 
         // ==================== CART FUNCTIONS ====================
