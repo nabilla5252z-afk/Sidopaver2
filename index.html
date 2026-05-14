@@ -1173,23 +1173,26 @@
             const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAycdhOR0QM_nhTxe3DR4R22EKBbmJ-vEX79Td0mAHSlsmkatIuPYbXZ70y46fGl6lMCKEepGDjspx/pub?gid=1401949523&single=true&output=csv";
             try {
                 const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                 const csv = await res.text();
                 const lines = csv.split("\n");
 
                 let stockOri = 0, stockNori = 0, stockSpicy = 0;
 
                 lines.slice(1).forEach(line => {
+                    if (!line.trim()) return;
                     const cols = line.split(",");
-                    const name = cols[0]?.trim();
+                    const name = cols[0]?.trim().toLowerCase();
                     const qty = parseInt(cols[1]) || 0;
 
-                    if (name === "SiOri") stockOri = qty;
-                    else if (name === "SiNori") stockNori = qty;
-                    else if (name === "SiSpicy") stockSpicy = qty;
+                    if (name.includes("ori")) stockOri = qty;
+                    else if (name.includes("nori")) stockNori = qty;
+                    else if (name.includes("spicy")) stockSpicy = qty;
                 });
 
                 updateStockBadges(stockOri, stockNori, stockSpicy);
                 console.log("✅ Stok berhasil diupdate dari Google Sheets!");
+                console.log(`📊 Si' Ori: ${stockOri}, Si' Nori: ${stockNori}, Si' Spicy: ${stockSpicy}`);
 
             } catch(err) {
                 console.error("❌ Fetch gagal, pakai localStorage:", err.message);
