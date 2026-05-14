@@ -1092,107 +1092,6 @@
     </div>
 
     <script>
-        async function fetchStockFromSpreadsheet() {
-
-            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
-
-            try {
-
-                const res = await fetch(url);
-
-                const csv = await res.text();
-
-                console.log(csv);
-
-                const lines = csv.split("\n");
-
-                lines.slice(1).forEach(line => {
-
-                    const cols = line.split(",");
-
-                    const name = cols[0]?.trim();
-                    const qty = parseInt(cols[1]) || 0;
-
-                    let badgeId = "";
-
-                    if (name === "SiOri") {
-                        badgeId = "stockBadgeOri";
-                    }
-                    else if (name === "SiNori") {
-                        badgeId = "stockBadgeNori";
-                    }
-                    else if (name === "SiSpicy") {
-                        badgeId = "stockBadgeSpicy";
-                    }
-
-                    if (!badgeId) return;
-
-                    const badge = document.getElementById(badgeId);
-
-                    badge.textContent = `Stok: ${qty}`;
-
-                    badge.className =
-                        qty === 0
-                            ? "stock-badge out"
-                            : "stock-badge";
-
-                    console.log(name, qty);
-
-                });
-
-            } catch(err) {
-
-                console.error(err);
-
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-
-            document.getElementById("stockBadgeOri").textContent = "Loading...";
-            document.getElementById("stockBadgeNori").textContent = "Loading...";
-            document.getElementById("stockBadgeSpicy").textContent = "Loading...";
-
-            fetchStockFromSpreadsheet();
-
-        });
-        /*
-        async function fetchStockFromSpreadsheet() {
-            console.log("🔄 Mulai fetch data...");
-
-            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
-
-            try {
-                const res = await fetch(url);
-                console.log("📡 Response status:", res.status);
-
-                const csv = await res.text();
-                console.log("📄 Isi CSV (5 karakter pertama):", csv.substring(0, 100));
-
-                const lines = csv.split("\n");
-                console.log("📊 Jumlah baris:", lines.length);
-
-                lines.slice(1).forEach((line, index) => {
-                    const cols = line.split(",");
-                    const name = cols[0]?.trim();
-                    const qty = parseInt(cols[1]) || 0;
-                    console.log(`Baris ${index + 1}: name="${name}", qty=${qty}`);
-
-                    // ... sisa kode
-                });
-
-            } catch(err) {
-                console.error("❌ Fetch gagal:", err.message);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log("✅ DOM siap");
-            fetchStockFromSpreadsheet().catch(err => {
-                console.error("❌ Error utama:", err);
-            });
-        });
-        */
         let cart = [];
         let lastSubmitTime = 0; // Untuk mencegah double submit
         let pendingSubmit = null; // Untuk track pending submission
@@ -1268,22 +1167,40 @@
         }
 
         function updateStockDisplay() {
-            // Coba baca dari Google Sheets dulu (real-time data)
-            fetchStockFromGoogleSheets();
+            fetchStockFromSpreadSheet();
         }
 
-        function fetchStockFromGoogleSheets() {
-            // 📡 FETCH STOK DARI GOOGLE SHEETS (real-time)
-            // URL ini adalah public Google Sheet yang share
-            // Format: https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/Stock!A1:C2?key={API_KEY}
+        async function fetchStockFromSpreadSheet() {
 
-            // SETUP DIMULAI DARI SINI (admin perlu set Google Sheets)
-            // Untuk sekarang, gunakan fallback ke localStorage
-            const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
-            const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
-            const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
+            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
 
-            updateStockBadges(stockOri, stockNori, stockSpicy);
+            try {
+                const res = await fetch(url);
+                const csv = await res.text();
+                const lines = csv.split("\n");
+
+                let stockOri = 0, stockNori = 0, stockSpicy = 0;
+
+                lines.slice(1).forEach(line => {
+                    const cols = line.split(",");
+                    const name = cols[0]?.trim();
+                    const qty = parseInt(cols[1]) || 0;
+
+                    if (name === "SiOri") stockOri = qty;
+                    else if (name === "SiNori") stockNori = qty;
+                    else if (name === "SiSpicy") stockSpicy = qty;
+                });
+
+                updateStockBadges(stockOri, stockNori, stockSpicy);
+                console.log("✅ Stok berhasil diupdate dari Google Sheets!");
+
+            } catch(err) {
+                console.error("❌ Fetch gagal, pakai localStorage:", err.message);
+                const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
+                const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
+                const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
+                updateStockBadges(stockOri, stockNori, stockSpicy);
+            }
         }
 
         function updateStockBadges(stockOri, stockNori, stockSpicy) {
@@ -1663,7 +1580,7 @@
 
             // 📡 FETCH STOK DARI GOOGLE SHEETS (real-time update)
             console.log('📡 Fetching stock data...');
-            fetchStockFromGoogleSheets();
+            fetchStockFromSpreadSheet();
 
             // Initialize pre-order display
             updatePreorderDisplay();
