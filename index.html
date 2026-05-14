@@ -936,25 +936,6 @@
         </div>
     </div>
 
-    <!-- Pre Order Info Box -->
-    <!-- <div class="preorder-info-box" id="preorderInfoBox">
-        <h3>📅 Informasi Pre Order Si Dopa</h3>
-        <div class="preorder-info-row">
-            <div class="preorder-info-item">
-                <label>Periode Pre Order</label>
-                <value id="displayPreorderPeriod">-</value>
-            </div>
-            <div class="preorder-info-item">
-                <label>Tanggal Ready Produk</label>
-                <value id="displayProductReady">-</value>
-            </div>
-            <div class="preorder-info-item">
-                <label>Jam Ambil</label>
-                <value id="displayPickupTime">-</value>
-            </div>
-        </div>
-        <div class="admin-access-hint" onclick="promptAdminPassword()">🔐 Admin Access</div>
-    </div> -->
 
     <!-- Main Container -->
     <div class="container">
@@ -1175,67 +1156,57 @@
 
         function updateStockDisplay() {
             fetchStockFromSpreadSheet();
+                // Ambil data dari localStorage
+        const start = localStorage.getItem('preorder_start') || '';
+        const end = localStorage.getItem('preorder_end') || '';
+        const ready = localStorage.getItem('product_ready') || '';
+        const time = localStorage.getItem('pickup_time') || '';
+
+    // Kalau belum ada data, tidak perlu tampilkan apapun
+    console.log('Pre-order info:', { start, end, ready, time });
         }
 
         async function fetchStockFromSpreadSheet() {
-            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAycdhOR0QM_nhTxe3DR4R22EKBbmJ-vEX79Td0mAHSlsmkatIuPYbXZ70y46fGl6lMCKEepGDjspx/pub?gid=1401949523&single=true&output=csv";
-            try {
-                const res = await fetch(url);
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-                const csv = await res.text();
-                const lines = csv.split("\n");
+    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAycdhOR0QM_nhTxe3DR4R22EKBbmJ-vEX79Td0mAHSlsmkatIuPYbXZ70y46fGl6lMCKEepGDjspx/pub?gid=1401949523&single=true&output=csv&t=" + Date.now();
+    
+    try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const csv = await res.text();
+        
+        console.log("📄 RAW CSV:", csv); // ← lihat isi CSV di console
+        
+        const lines = csv.split("\n");
+        let stockOri = 0, stockNori = 0, stockSpicy = 0;
 
-                console.log("📥 Raw CSV Data dari Sheet:");
-                console.log(csv);
-                console.log("📊 Parsed Lines:");
-                lines.forEach((line, idx) => console.log(`Line ${idx}: ${line}`));
+        lines.slice(1).forEach(line => {
+            if (!line.trim()) return;
+            const cols = line.split(",");
+            const name = cols[0]?.trim().toLowerCase().replace(/['"]/g, "");
+            const qty = parseInt(cols[1]) || 0;
 
-                let stockOri = 0, stockNori = 0, stockSpicy = 0;
-                let totalStock = 0;
+            console.log(`→ nama: "${name}", qty: ${qty}`); // ← debug tiap baris
 
-                lines.slice(1).forEach((line, idx) => {
-                    if (!line.trim()) return;
-                    const cols = line.split(",");
-                    const name = cols[0]?.trim().toLowerCase();
-                    const qty = parseInt(cols[1]) || 0;
+            if (name.includes("nori")) stockNori = qty;
+            else if (name.includes("ori")) stockOri = qty;
+            else if (name.includes("spicy")) stockSpicy = qty;
+        });
 
-                    console.log(`Row ${idx}: name="${cols[0]}" (parsed: "${name}"), qty="${cols[1]}" (parsed: ${qty})`);
+        const totalStock = stockOri + stockNori + stockSpicy;
+        updateStockBadges(stockOri, stockNori, stockSpicy);
+        updateTotalStockDisplay(totalStock);
+        console.log(`✅ Ori:${stockOri} Nori:${stockNori} Spicy:${stockSpicy}`);
 
-                    if (name.includes("ori")) {
-                        stockOri = qty;
-                        console.log(`✅ Si' Ori matched: ${stockOri}`);
-                    }
-                    else if (name.includes("nori")) {
-                        stockNori = qty;
-                        console.log(`✅ Si' Nori matched: ${stockNori}`);
-                    }
-                    else if (name.includes("spicy")) {
-                        stockSpicy = qty;
-                        console.log(`✅ Si' Spicy matched: ${stockSpicy}`);
-                    }
-                });
-
-                // Hitung total stock
-                totalStock = stockOri + stockNori + stockSpicy;
-
-                updateStockBadges(stockOri, stockNori, stockSpicy);
-                updateTotalStockDisplay(totalStock);
-                
-                console.log("✅ Stok berhasil diupdate dari Google Sheets!");
-                console.log(`📊 Si' Ori: ${stockOri}, Si' Nori: ${stockNori}, Si' Spicy: ${stockSpicy}`);
-                console.log(`📈 Total Stok: ${totalStock}`);
-
-            } catch(err) {
-                console.error("❌ Fetch gagal, pakai localStorage:", err.message);
-                const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
-                const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
-                const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
-                const totalStock = stockOri + stockNori + stockSpicy;
-                updateStockBadges(stockOri, stockNori, stockSpicy);
-                updateTotalStockDisplay(totalStock);
-            }
-        }
-
+    } catch(err) {
+        console.error("❌ Fetch gagal:", err.message);
+        // fallback localStorage
+        const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
+        const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
+        const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
+        updateStockBadges(stockOri, stockNori, stockSpicy);
+        updateTotalStockDisplay(stockOri + stockNori + stockSpicy);
+    }
+}
         function updateStockBadges(stockOri, stockNori, stockSpicy) {
             // Update badges
             document.getElementById('stockBadgeOri').textContent = `Stok: ${stockOri}`;
@@ -1290,32 +1261,6 @@
                     totalElement.parentElement.style.borderColor = '#11998e';
                 }
             }
-        }
-
-        function updatePreorderDisplay() {
-            const startDate = localStorage.getItem('preorder_start');
-            const endDate = localStorage.getItem('preorder_end');
-            const readyDate = localStorage.getItem('product_ready');
-            const pickupTime = localStorage.getItem('pickup_time');
-
-            // Format tanggal
-            const formatDate = (dateStr) => {
-                if (!dateStr) return '-';
-                const date = new Date(dateStr + 'T00:00:00');
-                return date.toLocaleDateString('id-ID', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
-            };
-
-            const formatTime = (timeStr) => {
-                return timeStr || '-';
-            };
-
-            const periodText = (startDate && endDate)
-                ? `${formatDate(startDate)} s/d ${formatDate(endDate)}`
-                : '-';
-
-            document.getElementById('displayPreorderPeriod').textContent = periodText;
-            document.getElementById('displayProductReady').textContent = formatDate(readyDate);
-            document.getElementById('displayPickupTime').textContent = formatTime(pickupTime);
         }
 
         // ==================== STOK VALIDATION ====================
