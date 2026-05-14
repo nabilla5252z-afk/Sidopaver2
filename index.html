@@ -1081,81 +1081,96 @@
 
     <script>
   // ─── KONFIGURASI ──────────────────────────────────────
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7P1eRUwWBC3Lhtmd7WnWmAqxIcQNuIdgL5akeUgj_ZvmErZWYp8tNPMDfE2U9vw84/exec;
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7P1eRUwWBC3Lhtmd7WnWmAqxIcQNuIdgL5akeUgj_ZvmErZWYp8tNPMDfE2U9vw84/exec";
 // PASTIKAN KEY INI SAMA DENGAN YANG ADA DI APPS SCRIPT
 const API_KEY = "KUNCI_RAHASIA_123"; 
 
-// ── Fetch stok (GET) ───────────────────────────────────
-async function fetchStockFromSpreadSheet() {
-  try {
-    // Menambahkan &key= ke dalam URL
-    const urlWithKey = `${APPS_SCRIPT_URL}?action=getStock&key=${API_KEY}&t=${Date.now()}`;
-    
-    const res  = await fetch(urlWithKey);
-    const json = await res.json();
-    
-    if (json.status !== "ok") throw new Error(json.message || "Response error");
+// ============ APPS SCRIPT (Code.gs) ============
+const SHEET_ID = "ID_SPREADSHEET_KAMU";
+const API_KEY  = "KUNCI_RAHASIA_123"; // sama dengan di frontend
 
-    const s = json.stok;
-    updateStockBadges(s.ori || 0, s.nori || 0, s.spicy || 0);
-    updateTotalStockDisplay((s.ori||0) + (s.nori||0) + (s.spicy||0));
-
-  } catch (err) {
-    console.error("Fetch stok gagal:", err.message);
-    // Fallback ke localStorage jika koneksi gagal
-    const ori   = parseInt(localStorage.getItem("stock_ori"))   || 0;
-    const nori  = parseInt(localStorage.getItem("stock_nori"))  || 0;
-    const spicy = parseInt(localStorage.getItem("stock_spicy")) || 0;
-    updateStockBadges(ori, nori, spicy);
-    updateTotalStockDisplay(ori + nori + spicy);
-  }
+function doGet(e) {
+  return handleRequest(e);
 }
 
-// ── Submit order (POST) ───────────────────────────────
-async function submitToGoogleForm(nama, lokasi, tanggal, metode, 
-                                   qtyOri, qtyNori, qtySpicy, 
-                                   total, salesCode, orderId) {
-  try {
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      // Apps Script kadang sensitif dengan headers, 
-      // tapi secara umum application/json adalah standar yang tepat
-      body: JSON.stringify({
-        key: API_KEY, // MENYISIPKAN KEY DI DALAM BODY
-        action: "submitOrder",
-        nama, lokasi, tanggal, metode,
-        qtyOri, qtyNori, qtySpicy,
-        total, salesCode
-      })
-    });
+function doPost(e) {
+  return handleRequest(e);
+}
 
-    const json = await res.json();
-
-    if (json.status !== "ok") {
-      alert("❌ " + (json.message || "Gagal menyimpan order"));
-      return;
-    }
-
-    // Berhasil: bersihkan state
-    markOrderAsSubmitted(orderId);
-    cart = [];
-    updateCart();
-    
-    // Reset form fields
-    document.getElementById("buyerName").value      = "";
-    document.getElementById("pickupLocation").value = "";
-    document.getElementById("pickupDate").value     = "";
-    document.getElementById("paymentMethod").value  = "";
-
-    // Refresh stok langsung setelah order agar data sinkron
-    fetchStockFromSpreadSheet();
-
-    alert("✅ Pesanan berhasil dikirim! Lanjutkan konfirmasi di WhatsApp.");
-
-  } catch (err) {
-    console.error("Submit order gagal:", err);
-    alert("❌ Gagal mengirim pesanan. Periksa koneksi internet kamu.");
+function handleRequest(e) {
+  // Ambil params dari GET atau POST
+  let params = {};
+  if (e.parameter)       params = e.parameter;
+  if (e.postData?.contents) {
+    try { Object.assign(params, JSON.parse(e.postData.contents)); } catch(_) {}
   }
+
+  // Validasi API key
+  if (params.key !== API_KEY) {
+    return respond({ status: "error", message: "Akses ditolak" });
+  }
+
+  const action = params.action || "";
+
+  if (action === "getStock")    return respond(getStock());
+  if (action === "submitOrder") return respond(submitOrder(params));
+
+  return respond({ status: "error", message: "Action tidak dikenal" });
+}
+
+// ── Ambil stok dari sheet ──────────────────────────────
+function getStock() {
+  const ss    = SpreadsheetApp.openById(SHEET_ID);
+  const sheet = ss.getSheetByName("Stok"); // sesuaikan nama sheet
+  return {
+    status: "ok",
+    stok: {
+      ori:   sheet.getRange("B2").getValue(),
+      nori:  sheet.getRange("B3").getValue(),
+      spicy: sheet.getRange("B4").getValue()
+    }
+  };
+}
+
+// ── Simpan order DAN kurangi stok ─────────────────────
+function submitOrder(p) {
+  const ss        = SpreadsheetApp.openById(SHEET_ID);
+  const stokSheet = ss.getSheetByName("Stok");
+  const orderSheet= ss.getSheetByName("Pesanan"); // sesuaikan nama sheet
+
+  // Baca stok saat ini
+  let oriNow   = stokSheet.getRange("B2").getValue();
+  let noriNow  = stokSheet.getRange("B3").getValue();
+  let spicyNow = stokSheet.getRange("B4").getValue();
+
+  const qOri   = parseInt(p.qtyOri)   || 0;
+  const qNori  = parseInt(p.qtyNori)  || 0;
+  const qSpicy = parseInt(p.qtySpicy) || 0;
+
+  // Cek kecukupan stok
+  if (qOri > oriNow || qNori > noriNow || qSpicy > spicyNow) {
+    return { status: "error", message: "Stok tidak mencukupi" };
+  }
+
+  // Kurangi stok
+  stokSheet.getRange("B2").setValue(oriNow   - qOri);
+  stokSheet.getRange("B3").setValue(noriNow  - qNori);
+  stokSheet.getRange("B4").setValue(spicyNow - qSpicy);
+
+  // Catat pesanan
+  orderSheet.appendRow([
+    new Date(), p.nama, p.lokasi, p.tanggal, p.metode,
+    qOri, qNori, qSpicy, p.total, p.salesCode
+  ]);
+
+  return { status: "ok", message: "Pesanan berhasil dicatat" };
+}
+
+// ── Helper: return JSON dengan header CORS ─────────────
+function respond(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 }
     </script>
 </body>
