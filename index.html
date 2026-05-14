@@ -1085,39 +1085,6 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7P1eRUwWBC3Lh
 // PASTIKAN KEY INI SAMA DENGAN YANG ADA DI APPS SCRIPT
 const API_KEY = "KUNCI_RAHASIA_123"; 
 
-// ============ APPS SCRIPT (Code.gs) ============
-const SHEET_ID = "ID_SPREADSHEET_KAMU";
-const API_KEY  = "KUNCI_RAHASIA_123"; // sama dengan di frontend
-
-function doGet(e) {
-  return handleRequest(e);
-}
-
-function doPost(e) {
-  return handleRequest(e);
-}
-
-function handleRequest(e) {
-  // Ambil params dari GET atau POST
-  let params = {};
-  if (e.parameter)       params = e.parameter;
-  if (e.postData?.contents) {
-    try { Object.assign(params, JSON.parse(e.postData.contents)); } catch(_) {}
-  }
-
-  // Validasi API key
-  if (params.key !== API_KEY) {
-    return respond({ status: "error", message: "Akses ditolak" });
-  }
-
-  const action = params.action || "";
-
-  if (action === "getStock")    return respond(getStock());
-  if (action === "submitOrder") return respond(submitOrder(params));
-
-  return respond({ status: "error", message: "Action tidak dikenal" });
-}
-
 // ── Ambil stok dari sheet ──────────────────────────────
 function getStock() {
   const ss    = SpreadsheetApp.openById(SHEET_ID);
