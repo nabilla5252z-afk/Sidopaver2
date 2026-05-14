@@ -1092,47 +1092,94 @@
     </div>
 
     <script>
-        async function fetchData() {
+        async function fetchStockFromGoogleSheets() {
+
             const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
 
             try {
+
                 const res = await fetch(url);
 
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }
+
                 const csvText = await res.text();
+
                 const parsed = Papa.parse(csvText, {
                     header: true
                 });
 
                 const rows = parsed.data;
 
-                // Mapping nama produk -> id badge HTML
+                // Mapping spreadsheet -> badge HTML
                 const badgeMap = {
                     "SiOri": "stockBadgeOri",
                     "SiNori": "stockBadgeNori",
                     "SiSpicy": "stockBadgeSpicy"
                 };
 
+                // Simpan stock sementara
+                let stockOri = 0;
+                let stockNori = 0;
+                let stockSpicy = 0;
+
                 rows.forEach((stock) => {
+
                     if (!stock.name || stock.name.trim() === "") return;
+
+                    const qty = parseInt(stock.quantity) || 0;
+
+                    // Cari badge
                     const badgeId = badgeMap[stock.name];
+
                     if (!badgeId) return;
+
+                    // Update badge
                     const badge = document.getElementById(badgeId);
+
                     if (badge) {
-                        const qty = parseInt(stock.quantity) || 0;
+
                         badge.textContent = `Stok: ${qty}`;
+
                         badge.className = qty === 0
                             ? 'stock-badge out'
                             : 'stock-badge';
+
                         console.log(`✅ ${stock.name} loaded: ${qty} unit`);
                     }
+
+                    // Simpan ke variabel stock
+                    if (stock.name === "SiOri") {
+                        stockOri = qty;
+                    }
+
+                    if (stock.name === "SiNori") {
+                        stockNori = qty;
+                    }
+
+                    if (stock.name === "SiSpicy") {
+                        stockSpicy = qty;
+                    }
                 });
-                console.log('✅ Data dari Google Sheets loaded successfully');
+
+                // Update tombol add to cart
+                updateAddButtonState("Si' Ori", stockOri);
+                updateAddButtonState("Si' Nori", stockNori);
+                updateAddButtonState("Si' Spicy", stockSpicy);
+
+                console.log('✅ Data Google Sheets berhasil dimuat');
+
             } catch (error) {
-                console.error('❌ Error fetching from Google Sheets:', error);
-                loadLocalData();
+
+                console.error('❌ Error fetching Google Sheets:', error);
+
+                // fallback localStorage
+                const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
+                const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
+                const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
+
+                updateStockBadges(stockOri, stockNori, stockSpicy);
             }
         }
 
