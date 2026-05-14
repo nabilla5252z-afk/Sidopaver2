@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,14 +24,14 @@
             color: white;
             padding: 20px 0;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(255,152,0,0.3);
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
         }
 
         header h1 {
             font-size: 2.5em;
             margin: 0;
             margin-bottom: 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             height: 160px;
             display: flex;
             align-items: center;
@@ -39,7 +40,7 @@
         }
 
         header h1 img {
-            display:block;
+            display: block;
             margin: 0 auto -45px;
             max-width: 100%;
             max-height: 300px;
@@ -47,28 +48,32 @@
             height: 300px;
             object-fit: contain;
         }
+
         header p {
             font-size: 1.1em;
             opacity: 1;
             color: #FFFFFF;
             font-weight: 700;
             letter-spacing: 0.5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         @media (max-width: 768px) {
             header {
                 padding: 12px 0;
             }
+
             header h1 {
                 height: 100px;
                 font-size: 1.5em;
             }
+
             header h1 img {
                 width: 160px;
                 height: 160px;
                 margin: 0 auto -28px;
             }
+
             header p {
                 font-size: 0.85em;
                 padding: 0 10px;
@@ -101,10 +106,12 @@
                 margin-bottom: 25px;
                 background-attachment: scroll;
             }
+
             .hero h2 {
                 font-size: 1.3em;
                 margin-bottom: 8px;
             }
+
             .hero p {
                 font-size: 0.9em;
                 margin-bottom: 3px;
@@ -135,7 +142,7 @@
             background: white;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -144,7 +151,7 @@
 
         .product-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
         .product-item:nth-child(even) {
@@ -166,7 +173,7 @@
             align-items: center;
             justify-content: center;
             font-size: 120px;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255, 255, 255, 0.4);
             font-weight: bold;
             overflow: hidden;
         }
@@ -273,7 +280,7 @@
             height: fit-content;
             background: #FFFAF0;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(255,152,0,0.15);
+            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.15);
             padding: 30px;
             border-top: 4px solid #FF9800;
         }
@@ -648,6 +655,7 @@
                 padding: 12px;
             }
         }
+
         /* Admin Panel Styling */
         .admin-panel-overlay {
             display: none;
@@ -674,7 +682,7 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         .admin-panel-modal h2 {
@@ -777,7 +785,7 @@
             margin: 20px auto;
             max-width: 600px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(255,152,0,0.1);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.1);
         }
 
         .preorder-info-box h3 {
@@ -839,16 +847,22 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
+
 <body>
     <!-- Admin Panel Overlay -->
     <div class="admin-panel-overlay" id="adminPanelOverlay">
         <div class="admin-panel-modal">
             <h2 id="adminPanelTitle">Admin Panel</h2>
-            
+
             <!-- Tab untuk switch antara Stok dan Pre Order -->
-            <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #FFE0B2; padding-bottom: 10px;">
-                <button onclick="switchAdminTab('stock')" id="tabStockBtn" style="flex: 1; padding: 10px; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📦 Stok</button>
-                <button onclick="switchAdminTab('preorder')" id="tabPreorderBtn" style="flex: 1; padding: 10px; background: #FFE0B2; color: #FF6F00; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📅 Pre Order</button>
+            <div
+                style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #FFE0B2; padding-bottom: 10px;">
+                <button onclick="switchAdminTab('stock')" id="tabStockBtn"
+                    style="flex: 1; padding: 10px; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📦
+                    Stok</button>
+                <button onclick="switchAdminTab('preorder')" id="tabPreorderBtn"
+                    style="flex: 1; padding: 10px; background: #FFE0B2; color: #FF6F00; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📅
+                    Pre Order</button>
             </div>
 
             <!-- Stok Panel -->
@@ -900,15 +914,18 @@
     <!-- Header -->
     <header>
         <h1><img src="sidopa.png" alt="Si Dopa"></h1>
-        <p>🌕🌕Camilan crunchy berbentuk bola-bola yang diolah dari bahan baku singkong dan campuran tepung kanji dengan bumbu tabur yang bantu naikkan mood🌕🌕 <p>
-            <p>👇</p>
+        <p>🌕🌕Camilan crunchy berbentuk bola-bola yang diolah dari bahan baku singkong dan campuran tepung kanji dengan
+            bumbu tabur yang bantu naikkan mood🌕🌕
+        <p>
+        <p>👇</p>
         </p>Camilan Enak, Murah, Banyak untuk temani Belajar atau Bekerja👩‍💻</p>
     </header>
 
     <!-- Hero Section -->
     <div class="hero">
         <h2>✨Bukan hanya sekedar camilan, tapi teman produktif yang menyenangkan✨</h2>
-        <p>✅Si Dopa akan memberikan pengalaman lawan jenuh dan stressnya bekerja atau belajar melalui teksturnya yang renyah </p>
+        <p>✅Si Dopa akan memberikan pengalaman lawan jenuh dan stressnya bekerja atau belajar melalui teksturnya yang
+            renyah </p>
         <p>✅Sensasi varian rasa yang buat kamu kembali fokus dan enjoy dengan aktivitasmu</p>
     </div>
 
@@ -954,7 +971,8 @@
                             <input type="number" value="1" min="1" class="qty-input">
                             <button onclick="incrementQty(this)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" id="addBtnOri" onclick="addToCart('Si\' Ori', 5000, this)">Tambah ke Keranjang</button>
+                        <button class="add-to-cart-btn" id="addBtnOri"
+                            onclick="addToCart('Si\' Ori', 5000, this)">Tambah ke Keranjang</button>
                     </div>
                 </div>
 
@@ -975,7 +993,8 @@
                             <input type="number" value="1" min="1" class="qty-input">
                             <button onclick="incrementQty(this)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" id="addBtnNori" onclick="addToCart('Si\' Nori', 5000, this)">Tambah ke Keranjang</button>
+                        <button class="add-to-cart-btn" id="addBtnNori"
+                            onclick="addToCart('Si\' Nori', 5000, this)">Tambah ke Keranjang</button>
                     </div>
                 </div>
 
@@ -986,7 +1005,8 @@
                     </div>
                     <div class="product-content">
                         <h3>Si'Spicy</h3>
-                        <div class="benefit-tag">✓ Mengurangi Stress dengan Rasa Pedas🔥, buatmu kamu kembali refresh ditengah tekanan🙂‍↔️</div>
+                        <div class="benefit-tag">✓ Mengurangi Stress dengan Rasa Pedas🔥, buatmu kamu kembali refresh
+                            ditengah tekanan🙂‍↔️</div>
                         <div class="stock-badge" id="stockBadgeSpicy">Stok: 0</div>
                         <p class="product-description">
                         </p>
@@ -996,7 +1016,8 @@
                             <input type="number" value="1" min="1" class="qty-input">
                             <button onclick="incrementQty(this)">+</button>
                         </div>
-                        <button class="add-to-cart-btn" id="addBtnSpicy" onclick="addToCart('Si\' Spicy', 5500, this)">Tambah ke Keranjang</button>
+                        <button class="add-to-cart-btn" id="addBtnSpicy"
+                            onclick="addToCart('Si\' Spicy', 5500, this)">Tambah ke Keranjang</button>
                     </div>
                 </div>
             </div>
@@ -1005,7 +1026,7 @@
         <!-- Cart Sidebar (Sticky) -->
         <aside class="cart-sidebar">
             <h2>🛒 Keranjang</h2>
-            
+
             <div class="cart-items" id="cartItems">
                 <div class="empty-cart-message">Keranjang Anda masih kosong</div>
             </div>
@@ -1020,10 +1041,10 @@
             <!-- Form Pengisian Data -->
             <div class="order-form">
                 <h3>📝 Detail Pemesan</h3>
-                
+
                 <!-- Input Hidden untuk Sales Tracking -->
                 <input type="hidden" id="salesCode" value="">
-                
+
                 <div class="form-group">
                     <label for="buyerName">Nama Pembeli</label>
                     <input type="text" id="buyerName" placeholder="Masukkan nama Anda" required>
@@ -1056,8 +1077,10 @@
 
             <button class="checkout-btn" onclick="openWhatsApp()" id="checkoutBtn" style="display: none;">
                 <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 2.1.56 4.09 1.52 5.8L0 24l6.39-1.48C8.9 23.44 10.9 24 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0zm0 22c-1.87 0-3.67-.5-5.23-1.35l-.37-.2-3.88.9.92-3.71-.24-.37C2.5 15.67 2 13.88 2 12c0-5.51 4.49-10 10-10s10 4.49 10 10-4.49 10-10 10z"/>
-                    <path d="M16.67 14.59c-.28-.14-1.65-.82-1.91-.92-.25-.09-.44-.14-.62.14-.19.28-.72.92-.88 1.11-.16.19-.33.21-.61.07-.28-.14-1.19-.44-2.27-1.4-.84-.75-1.41-1.68-1.57-1.97-.16-.28-.02-.44.12-.58.12-.12.28-.33.41-.49.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.62-1.5-.85-2.05-.23-.54-.46-.46-.62-.47-.16 0-.35-.02-.53-.02-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.39 0 1.41 1.03 2.77 1.17 2.96.14.19 1.98 3.02 4.82 4.24 2.85 1.22 2.85.81 3.37.76.52-.05 1.65-.67 1.88-1.33.23-.66.23-1.23.16-1.35-.07-.12-.26-.19-.55-.33z"/>
+                    <path
+                        d="M12 0C5.37 0 0 5.37 0 12c0 2.1.56 4.09 1.52 5.8L0 24l6.39-1.48C8.9 23.44 10.9 24 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0zm0 22c-1.87 0-3.67-.5-5.23-1.35l-.37-.2-3.88.9.92-3.71-.24-.37C2.5 15.67 2 13.88 2 12c0-5.51 4.49-10 10-10s10 4.49 10 10-4.49 10-10 10z" />
+                    <path
+                        d="M16.67 14.59c-.28-.14-1.65-.82-1.91-.92-.25-.09-.44-.14-.62.14-.19.28-.72.92-.88 1.11-.16.19-.33.21-.61.07-.28-.14-1.19-.44-2.27-1.4-.84-.75-1.41-1.68-1.57-1.97-.16-.28-.02-.44.12-.58.12-.12.28-.33.41-.49.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.62-1.5-.85-2.05-.23-.54-.46-.46-.62-.47-.16 0-.35-.02-.53-.02-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.39 0 1.41 1.03 2.77 1.17 2.96.14.19 1.98 3.02 4.82 4.24 2.85 1.22 2.85.81 3.37.76.52-.05 1.65-.67 1.88-1.33.23-.66.23-1.23.16-1.35-.07-.12-.26-.19-.55-.33z" />
                 </svg>
                 WhatsApp
             </button>
@@ -1071,52 +1094,64 @@
     <script>
         async function fetchData() {
             const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
+
             try {
                 const res = await fetch(url);
-                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+
                 const csvText = await res.text();
-                const parsed = Papa.parse(csvText, { header: true });
-                const rows = parsed.data;
-                
-                const tableBody = document.getElementById("tableBody");
-                tableBody.innerHTML = "";
-                
-                rows.forEach((stock, i) => {
-                    if (!stock.name || stock.name.trim() === "") return;
-                    const div = document.createElement("div");
-                    div.className = "border px-4 py-2 text-center bg-white mb-2";
-                    div.textContent = `${stock.name}: ${stock.quantity || 0}`;
-                    tableBody.appendChild(div);
+
+                const parsed = Papa.parse(csvText, {
+                    header: true
                 });
+
+                const rows = parsed.data;
+
+                // Mapping nama produk -> id badge HTML
+                const badgeMap = {
+                    "Si' Ori": "stockBadgeOri",
+                    "Si' Nori": "stockBadgeNori",
+                    "Si' Spicy": "stockBadgeSpicy"
+                };
+
+                rows.forEach((stock) => {
+
+                    if (!stock.name || stock.name.trim() === "") return;
+
+                    const badgeId = badgeMap[stock.name];
+
+                    if (!badgeId) return;
+
+                    const badge = document.getElementById(badgeId);
+
+                    if (badge) {
+
+                        const qty = parseInt(stock.quantity) || 0;
+
+                        // Update text
+                        badge.textContent = `Stok: ${qty}`;
+
+                        // Update class
+                        badge.className = qty === 0
+                            ? 'stock-badge out'
+                            : 'stock-badge';
+
+                        console.log(`✅ ${stock.name} loaded: ${qty} unit`);
+                    }
+                });
+
                 console.log('✅ Data dari Google Sheets loaded successfully');
+
             } catch (error) {
+
                 console.error('❌ Error fetching from Google Sheets:', error);
+
                 loadLocalData();
             }
         }
-
-        function loadLocalData() {
-            const localData = [
-                { name: "Si' Ori", quantity: 10, badgeId: "stockBadgeOri" },
-                { name: "Si' Nori", quantity: 10, badgeId: "stockBadgeNori" },
-                { name: "Si' Spicy", quantity: 10, badgeId: "stockBadgeSpicy" }
-            ];
-            
-            localData.forEach((stock) => {
-                // Update badge dengan stock quantity
-                const badge = document.getElementById(stock.badgeId);
-                if (badge) {
-                    badge.textContent = `Stok: ${stock.quantity}`;
-                    badge.className = stock.quantity === 0 ? 'stock-badge out' : 'stock-badge';
-                }
-                console.log(`✅ ${stock.name} loaded: ${stock.quantity} unit`);
-            });
-            console.log('✅ Stock data updated');
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchData();
-        });
 
         let cart = [];
         let lastSubmitTime = 0; // Untuk mencegah double submit
@@ -1146,7 +1181,7 @@
         function switchAdminTab(tab) {
             document.getElementById('stockPanel').style.display = tab === 'stock' ? 'block' : 'none';
             document.getElementById('preorderPanel').style.display = tab === 'preorder' ? 'block' : 'none';
-            
+
             document.getElementById('tabStockBtn').style.background = tab === 'stock' ? '#FF9800' : '#FFE0B2';
             document.getElementById('tabStockBtn').style.color = tab === 'stock' ? 'white' : '#FF6F00';
             document.getElementById('tabPreorderBtn').style.background = tab === 'preorder' ? '#FF9800' : '#FFE0B2';
@@ -1171,7 +1206,7 @@
             const stockOri = document.getElementById('stockOri').value;
             const stockNori = document.getElementById('stockNori').value;
             const stockSpicy = document.getElementById('stockSpicy').value;
-            
+
             localStorage.setItem('stock_ori', stockOri);
             localStorage.setItem('stock_nori', stockNori);
             localStorage.setItem('stock_spicy', stockSpicy);
@@ -1201,7 +1236,7 @@
             // 📡 FETCH STOK DARI GOOGLE SHEETS (real-time)
             // URL ini adalah public Google Sheet yang share
             // Format: https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/Stock!A1:C2?key={API_KEY}
-            
+
             // SETUP DIMULAI DARI SINI (admin perlu set Google Sheets)
             // Untuk sekarang, gunakan fallback ke localStorage
             const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
@@ -1265,7 +1300,7 @@
                 return timeStr || '-';
             };
 
-            const periodText = (startDate && endDate) 
+            const periodText = (startDate && endDate)
                 ? `${formatDate(startDate)} s/d ${formatDate(endDate)}`
                 : '-';
 
@@ -1376,7 +1411,7 @@
         function isOrderAlreadySubmitted(orderId) {
             const submittedOrders = JSON.parse(localStorage.getItem('submitted_orders')) || {};
             const currentTime = Date.now();
-            
+
             if (submittedOrders[orderId]) {
                 const timeDiff = currentTime - submittedOrders[orderId];
                 // Jika sudah submit dalam 5 detik terakhir, tolak
@@ -1432,7 +1467,7 @@
             // Hitung kuantitas per produk
             let qtyOri = 0, qtyNori = 0, qtySpicy = 0;
             let total = 0;
-            
+
             cart.forEach(item => {
                 if (item.name === 'Si\' Ori') {
                     qtyOri = item.quantity;
@@ -1446,15 +1481,15 @@
 
             // Ambil sales code
             const salesCode = document.getElementById('salesCode').value || 'Direct';
-            
+
             // Buat teks pesanan untuk WhatsApp
             let message = '*🛍️ PESANAN SI DOPA - SINGKONG CRUNCHY BALLS*\n\n';
-            
+
             message += '*👤 DATA PEMESAN:*\n';
             message += `Nama: ${buyerName}\n`;
             message += `Sales: ${salesCode}\n`;
             message += `Tempat Ambil: ${pickupLocation}\n`;
-            
+
             const dateObj = new Date(pickupDate + 'T00:00:00');
             const hariOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const tanggalFormatted = dateObj.toLocaleDateString('id-ID', hariOptions);
@@ -1520,7 +1555,7 @@
 
         function submitToGoogleForm(nama, lokasi, tanggal, metode, qtyOri, qtyNori, qtySpicy, total, salesCode, orderId) {
             const formId = '1FAIpQLSeDVnEzdZpBGgj3Rds39SQZOCXWox_vuA6g7-okAjvNPJ__9A';
-            
+
             const formData = new FormData();
             formData.append('entry.39058957', nama);
             formData.append('entry.269585913', lokasi);
@@ -1531,43 +1566,43 @@
             formData.append('entry.1514945499', qtySpicy);
             formData.append('entry.560903875', total);
             formData.append('entry.1712031817', salesCode);
-            
+
             const url = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
-            
+
             fetch(url, {
                 method: 'POST',
                 body: formData,
                 mode: 'no-cors'
             })
-            .then(() => {
-                // Mark sebagai submitted untuk anti-double-entry
-                markOrderAsSubmitted(orderId);
-                
-                console.log('✅ PESANAN BERHASIL MASUK KE SISTEM!');
-                console.log('✅ Data yang dikirim:');
-                console.log('  - Nama Pembeli: ' + nama);
-                console.log('  - Tempat Ambil: ' + lokasi);
-                console.log('  - Tanggal Pengambilan: ' + tanggal);
-                console.log('  - Metode Pembayaran: ' + metode);
-                console.log('  - Si\' Ori: ' + qtyOri + ' pcs');
-                console.log('  - Si\' Nori: ' + qtyNori + ' pcs');
-                console.log('  - Si\' Spicy: ' + qtySpicy + ' pcs');
-                console.log('  - Total: Rp ' + total);
-                console.log('  - Sales Code: ' + salesCode);
-                
-                // Clear cart after successful submission
-                cart = [];
-                updateCart();
-                document.getElementById('buyerName').value = '';
-                document.getElementById('pickupLocation').value = '';
-                document.getElementById('pickupDate').value = '';
-                document.getElementById('paymentMethod').value = '';
-                
-                alert('✅ Pesanan berhasil dikirim! Silakan melanjutkan di WhatsApp untuk konfirmasi pembayaran.');
-            })
-            .catch(error => {
-                console.error('❌ Error mengirim ke Google Forms:', error);
-            });
+                .then(() => {
+                    // Mark sebagai submitted untuk anti-double-entry
+                    markOrderAsSubmitted(orderId);
+
+                    console.log('✅ PESANAN BERHASIL MASUK KE SISTEM!');
+                    console.log('✅ Data yang dikirim:');
+                    console.log('  - Nama Pembeli: ' + nama);
+                    console.log('  - Tempat Ambil: ' + lokasi);
+                    console.log('  - Tanggal Pengambilan: ' + tanggal);
+                    console.log('  - Metode Pembayaran: ' + metode);
+                    console.log('  - Si\' Ori: ' + qtyOri + ' pcs');
+                    console.log('  - Si\' Nori: ' + qtyNori + ' pcs');
+                    console.log('  - Si\' Spicy: ' + qtySpicy + ' pcs');
+                    console.log('  - Total: Rp ' + total);
+                    console.log('  - Sales Code: ' + salesCode);
+
+                    // Clear cart after successful submission
+                    cart = [];
+                    updateCart();
+                    document.getElementById('buyerName').value = '';
+                    document.getElementById('pickupLocation').value = '';
+                    document.getElementById('pickupDate').value = '';
+                    document.getElementById('paymentMethod').value = '';
+
+                    alert('✅ Pesanan berhasil dikirim! Silakan melanjutkan di WhatsApp untuk konfirmasi pembayaran.');
+                })
+                .catch(error => {
+                    console.error('❌ Error mengirim ke Google Forms:', error);
+                });
         }
 
         // ==================== INITIALIZATION ====================
@@ -1576,10 +1611,10 @@
             return urlParams.get(name);
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('pickupDate').setAttribute('min', today);
-            
+
             const salesCode = getUrlParameter('sales') || getUrlParameter('ref');
             if (salesCode) {
                 document.getElementById('salesCode').value = salesCode;
@@ -1589,7 +1624,7 @@
             // 📡 FETCH STOK DARI GOOGLE SHEETS (real-time update)
             console.log('📡 Fetching stock data...');
             fetchStockFromGoogleSheets();
-            
+
             // Initialize pre-order display
             updatePreorderDisplay();
         });
@@ -1597,4 +1632,5 @@
         updateCart();
     </script>
 </body>
+
 </html>
