@@ -1080,15 +1080,21 @@
     </div>
 
     <script>
-   // ─── GANTI URL INI setelah deploy Apps Script ─────────
+  // ─── KONFIGURASI ──────────────────────────────────────
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxm0t9VEByy_gk5UvamVYvjhRvzm9XJz6VFFGyZtnOnRPmB-KQctK7h8CCE3H6lDqCu/exec";
+// PASTIKAN KEY INI SAMA DENGAN YANG ADA DI APPS SCRIPT
+const API_KEY = "KUNCI_RAHASIA_123"; 
 
 // ── Fetch stok (GET) ───────────────────────────────────
 async function fetchStockFromSpreadSheet() {
   try {
-    const res  = await fetch(APPS_SCRIPT_URL + "?action=getStock&t=" + Date.now());
+    // Menambahkan &key= ke dalam URL
+    const urlWithKey = `${APPS_SCRIPT_URL}?action=getStock&key=${API_KEY}&t=${Date.now()}`;
+    
+    const res  = await fetch(urlWithKey);
     const json = await res.json();
-    if (json.status !== "ok") throw new Error("Response error");
+    
+    if (json.status !== "ok") throw new Error(json.message || "Response error");
 
     const s = json.stok;
     updateStockBadges(s.ori || 0, s.nori || 0, s.spicy || 0);
@@ -1096,6 +1102,7 @@ async function fetchStockFromSpreadSheet() {
 
   } catch (err) {
     console.error("Fetch stok gagal:", err.message);
+    // Fallback ke localStorage jika koneksi gagal
     const ori   = parseInt(localStorage.getItem("stock_ori"))   || 0;
     const nori  = parseInt(localStorage.getItem("stock_nori"))  || 0;
     const spicy = parseInt(localStorage.getItem("stock_spicy")) || 0;
@@ -1104,15 +1111,17 @@ async function fetchStockFromSpreadSheet() {
   }
 }
 
-// ── Submit order (POST) — ganti submitToGoogleForm() ──
-async function submitToGoogleForm(nama, lokasi, tanggal, metode,
-                                   qtyOri, qtyNori, qtySpicy,
+// ── Submit order (POST) ───────────────────────────────
+async function submitToGoogleForm(nama, lokasi, tanggal, metode, 
+                                   qtyOri, qtyNori, qtySpicy, 
                                    total, salesCode, orderId) {
   try {
     const res = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      // Apps Script kadang sensitif dengan headers, 
+      // tapi secara umum application/json adalah standar yang tepat
       body: JSON.stringify({
+        key: API_KEY, // MENYISIPKAN KEY DI DALAM BODY
         action: "submitOrder",
         nama, lokasi, tanggal, metode,
         qtyOri, qtyNori, qtySpicy,
@@ -1131,19 +1140,21 @@ async function submitToGoogleForm(nama, lokasi, tanggal, metode,
     markOrderAsSubmitted(orderId);
     cart = [];
     updateCart();
+    
+    // Reset form fields
     document.getElementById("buyerName").value      = "";
     document.getElementById("pickupLocation").value = "";
     document.getElementById("pickupDate").value     = "";
     document.getElementById("paymentMethod").value  = "";
 
-    // Refresh stok langsung setelah order
+    // Refresh stok langsung setelah order agar data sinkron
     fetchStockFromSpreadSheet();
 
     alert("✅ Pesanan berhasil dikirim! Lanjutkan konfirmasi di WhatsApp.");
 
   } catch (err) {
     console.error("Submit order gagal:", err);
-    alert("❌ Gagal mengirim pesanan. Coba lagi.");
+    alert("❌ Gagal mengirim pesanan. Periksa koneksi internet kamu.");
   }
 }
     </script>
