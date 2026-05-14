@@ -1080,349 +1080,72 @@
     </div>
 
     <script>
-        let cart = [];
-let pendingSubmit = null;
+   // ─── GANTI URL INI setelah deploy Apps Script ─────────
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxm0t9VEByy_gk5UvamVYvjhRvzm9XJz6VFFGyZtnOnRPmB-KQctK7h8CCE3H6lDqCu/exec";
 
-// ==================== ADMIN FUNCTIONS ====================
-function promptAdminPassword() {
-    const password = prompt('🔐 Masukkan password admin:');
-    if (password === 'sidopa2026') {
-        openAdminPanel();
-    } else if (password !== null) {
-        alert('❌ Password salah!');
-    }
-}
-
-function openAdminPanel() {
-    document.getElementById('adminPanelOverlay').classList.add('active');
-    loadAdminData();
-}
-
-function closeAdminPanel() {
-    document.getElementById('adminPanelOverlay').classList.remove('active');
-}
-
-function switchAdminTab(tab) {
-    document.getElementById('stockPanel').style.display = tab === 'stock' ? 'block' : 'none';
-    document.getElementById('preorderPanel').style.display = tab === 'preorder' ? 'block' : 'none';
-    document.getElementById('tabStockBtn').style.background = tab === 'stock' ? '#FF9800' : '#FFE0B2';
-    document.getElementById('tabStockBtn').style.color = tab === 'stock' ? 'white' : '#FF6F00';
-    document.getElementById('tabPreorderBtn').style.background = tab === 'preorder' ? '#FF9800' : '#FFE0B2';
-    document.getElementById('tabPreorderBtn').style.color = tab === 'preorder' ? 'white' : '#FF6F00';
-}
-
-function loadAdminData() {
-    document.getElementById('stockOri').value = localStorage.getItem('stock_ori') || 0;
-    document.getElementById('stockNori').value = localStorage.getItem('stock_nori') || 0;
-    document.getElementById('stockSpicy').value = localStorage.getItem('stock_spicy') || 0;
-    document.getElementById('preorderStartDate').value = localStorage.getItem('preorder_start') || '';
-    document.getElementById('preorderEndDate').value = localStorage.getItem('preorder_end') || '';
-    document.getElementById('productReadyDate').value = localStorage.getItem('product_ready') || '';
-    document.getElementById('pickupTime').value = localStorage.getItem('pickup_time') || '';
-}
-
-function saveAdminChanges() {
-    localStorage.setItem('stock_ori', document.getElementById('stockOri').value);
-    localStorage.setItem('stock_nori', document.getElementById('stockNori').value);
-    localStorage.setItem('stock_spicy', document.getElementById('stockSpicy').value);
-    localStorage.setItem('preorder_start', document.getElementById('preorderStartDate').value);
-    localStorage.setItem('preorder_end', document.getElementById('preorderEndDate').value);
-    localStorage.setItem('product_ready', document.getElementById('productReadyDate').value);
-    localStorage.setItem('pickup_time', document.getElementById('pickupTime').value);
-
-    fetchStockFromSpreadSheet();
-    alert('✅ Data berhasil disimpan!');
-    closeAdminPanel();
-}
-
-// ==================== FETCH STOK DARI SPREADSHEET ====================
+// ── Fetch stok (GET) ───────────────────────────────────
 async function fetchStockFromSpreadSheet() {
-    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAycdhOR0QM_nhTxe3DR4R22EKBbmJ-vEX79Td0mAHSlsmkatIuPYbXZ70y46fGl6lMCKEepGDjspx/pub?gid=1401949523&single=true&output=csv&t=" + Date.now();
+  try {
+    const res  = await fetch(APPS_SCRIPT_URL + "?action=getStock&t=" + Date.now());
+    const json = await res.json();
+    if (json.status !== "ok") throw new Error("Response error");
 
-    try {
-        const res = await fetch(url, { cache: "no-store" });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const csv = await res.text();
+    const s = json.stok;
+    updateStockBadges(s.ori || 0, s.nori || 0, s.spicy || 0);
+    updateTotalStockDisplay((s.ori||0) + (s.nori||0) + (s.spicy||0));
 
-        console.log("📄 RAW CSV:", csv);
+  } catch (err) {
+    console.error("Fetch stok gagal:", err.message);
+    const ori   = parseInt(localStorage.getItem("stock_ori"))   || 0;
+    const nori  = parseInt(localStorage.getItem("stock_nori"))  || 0;
+    const spicy = parseInt(localStorage.getItem("stock_spicy")) || 0;
+    updateStockBadges(ori, nori, spicy);
+    updateTotalStockDisplay(ori + nori + spicy);
+  }
+}
 
-        const lines = csv.trim().split("\n");
-        let stockOri = 0, stockNori = 0, stockSpicy = 0;
+// ── Submit order (POST) — ganti submitToGoogleForm() ──
+async function submitToGoogleForm(nama, lokasi, tanggal, metode,
+                                   qtyOri, qtyNori, qtySpicy,
+                                   total, salesCode, orderId) {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "submitOrder",
+        nama, lokasi, tanggal, metode,
+        qtyOri, qtyNori, qtySpicy,
+        total, salesCode
+      })
+    });
 
-        lines.slice(1).forEach(function(line) {
-            if (!line.trim()) return;
-            const cols = line.split(",");
-            const name = (cols[0] || '').trim().toLowerCase().replace(/['"]/g, "");
-            const qty = parseInt((cols[1] || '0').trim()) || 0;
+    const json = await res.json();
 
-            console.log('→ nama: "' + name + '", qty: ' + qty);
-
-            if (name.includes("nori")) stockNori = qty;
-            else if (name.includes("spicy")) stockSpicy = qty;
-            else if (name.includes("ori")) stockOri = qty;
-        });
-
-        updateStockBadges(stockOri, stockNori, stockSpicy);
-        updateTotalStockDisplay(stockOri + stockNori + stockSpicy);
-        console.log("✅ Ori:" + stockOri + " Nori:" + stockNori + " Spicy:" + stockSpicy);
-
-    } catch(err) {
-        console.error("❌ Fetch gagal:", err.message);
-        const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
-        const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
-        const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
-        updateStockBadges(stockOri, stockNori, stockSpicy);
-        updateTotalStockDisplay(stockOri + stockNori + stockSpicy);
+    if (json.status !== "ok") {
+      alert("❌ " + (json.message || "Gagal menyimpan order"));
+      return;
     }
-}
 
-function updateStockBadges(stockOri, stockNori, stockSpicy) {
-    document.getElementById('stockBadgeOri').textContent = 'Stok: ' + stockOri;
-    document.getElementById('stockBadgeOri').className = 'stock-badge ' + (stockOri === 0 ? 'out' : '');
-    document.getElementById('stockBadgeNori').textContent = 'Stok: ' + stockNori;
-    document.getElementById('stockBadgeNori').className = 'stock-badge ' + (stockNori === 0 ? 'out' : '');
-    document.getElementById('stockBadgeSpicy').textContent = 'Stok: ' + stockSpicy;
-    document.getElementById('stockBadgeSpicy').className = 'stock-badge ' + (stockSpicy === 0 ? 'out' : '');
-    updateAddButtonState('addBtnOri', stockOri);
-    updateAddButtonState('addBtnNori', stockNori);
-    updateAddButtonState('addBtnSpicy', stockSpicy);
-}
-
-function updateAddButtonState(btnId, stock) {
-    const btn = document.getElementById(btnId);
-    if (!btn) return;
-    if (stock === 0) {
-        btn.disabled = true;
-        btn.textContent = '❌ Stok Habis';
-        btn.style.opacity = '0.5';
-        btn.style.cursor = 'not-allowed';
-    } else {
-        btn.disabled = false;
-        btn.textContent = 'Tambah ke Keranjang';
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
-    }
-}
-
-function updateTotalStockDisplay(totalStock) {
-    const el = document.getElementById('totalStockDisplay');
-    if (!el) return;
-    el.textContent = totalStock;
-    if (totalStock === 0) {
-        el.style.color = '#ff6b6b';
-    } else if (totalStock <= 10) {
-        el.style.color = '#ffa500';
-    } else {
-        el.style.color = '#11998e';
-    }
-}
-
-// ==================== VALIDASI STOK ====================
-function validateStockBeforeAddToCart(productName) {
-    let badgeId = '';
-    if (productName === "Si' Ori") badgeId = 'stockBadgeOri';
-    else if (productName === "Si' Nori") badgeId = 'stockBadgeNori';
-    else if (productName === "Si' Spicy") badgeId = 'stockBadgeSpicy';
-
-    const badge = document.getElementById(badgeId);
-    const qty = parseInt(badge.textContent.replace('Stok:', '').trim()) || 0;
-    return qty > 0;
-}
-
-// ==================== CART FUNCTIONS ====================
-function incrementQty(button) {
-    const input = button.previousElementSibling;
-    input.value = parseInt(input.value) + 1;
-}
-
-function decrementQty(button) {
-    const input = button.nextElementSibling;
-    if (parseInt(input.value) > 1) {
-        input.value = parseInt(input.value) - 1;
-    }
-}
-
-function addToCart(productName, price, button) {
-    if (!validateStockBeforeAddToCart(productName)) {
-        alert('❌ Produk ini sedang tidak tersedia!');
-        return;
-    }
-    const quantityInput = button.previousElementSibling.querySelector('.qty-input');
-    const quantity = parseInt(quantityInput.value);
-    const existingItem = cart.find(function(item) { return item.name === productName; });
-    if (existingItem) {
-        existingItem.quantity += quantity;
-    } else {
-        cart.push({ name: productName, price: price, quantity: quantity });
-    }
-    quantityInput.value = 1;
+    // Berhasil: bersihkan state
+    markOrderAsSubmitted(orderId);
+    cart = [];
     updateCart();
-}
+    document.getElementById("buyerName").value      = "";
+    document.getElementById("pickupLocation").value = "";
+    document.getElementById("pickupDate").value     = "";
+    document.getElementById("paymentMethod").value  = "";
 
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    updateCart();
-}
-
-function updateCart() {
-    const cartItemsDiv = document.getElementById('cartItems');
-    const cartBtn = document.getElementById('checkoutBtn');
-    if (cart.length === 0) {
-        cartItemsDiv.innerHTML = '<div class="empty-cart-message">Keranjang Anda masih kosong</div>';
-        cartBtn.style.display = 'none';
-    } else {
-        let html = '';
-        cart.forEach(function(item, index) {
-            const itemTotal = item.price * item.quantity;
-            html += '<div class="cart-item">';
-            html += '<div><div class="cart-item-name">' + item.name + '</div>';
-            html += '<div class="cart-item-qty">' + item.quantity + ' × Rp ' + item.price.toLocaleString('id-ID') + '</div></div>';
-            html += '<div style="display:flex;align-items:center;">';
-            html += '<div class="cart-item-price">Rp ' + itemTotal.toLocaleString('id-ID') + '</div>';
-            html += '<button class="remove-item" onclick="removeFromCart(' + index + ')">×</button>';
-            html += '</div></div>';
-        });
-        cartItemsDiv.innerHTML = html;
-        cartBtn.style.display = 'flex';
-    }
-    updateSummary();
-}
-
-function updateSummary() {
-    let total = 0;
-    cart.forEach(function(item) { total += item.price * item.quantity; });
-    document.getElementById('total').textContent = 'Rp ' + total.toLocaleString('id-ID');
-}
-
-// ==================== ANTI DOUBLE SUBMIT ====================
-function generateOrderId(buyerName, pickupDate, paymentMethod) {
-    return buyerName + '_' + pickupDate + '_' + paymentMethod;
-}
-
-function isOrderAlreadySubmitted(orderId) {
-    const orders = JSON.parse(localStorage.getItem('submitted_orders')) || {};
-    if (orders[orderId] && (Date.now() - orders[orderId]) < 5000) return true;
-    return false;
-}
-
-function markOrderAsSubmitted(orderId) {
-    const orders = JSON.parse(localStorage.getItem('submitted_orders')) || {};
-    orders[orderId] = Date.now();
-    localStorage.setItem('submitted_orders', JSON.stringify(orders));
-}
-
-// ==================== WHATSAPP ====================
-function openWhatsApp() {
-    if (cart.length === 0) { alert('Keranjang Anda kosong!'); return; }
-
-    const buyerName = document.getElementById('buyerName').value.trim();
-    const pickupLocation = document.getElementById('pickupLocation').value;
-    const pickupDate = document.getElementById('pickupDate').value;
-    const paymentMethod = document.getElementById('paymentMethod').value;
-
-    if (!buyerName) { alert('Silakan masukkan nama Anda!'); return; }
-    if (!pickupLocation) { alert('Silakan pilih tempat ambil!'); return; }
-    if (!pickupDate) { alert('Silakan pilih tanggal pengambilan!'); return; }
-    if (!paymentMethod) { alert('Silakan pilih metode pembayaran!'); return; }
-
-    const orderId = generateOrderId(buyerName, pickupDate, paymentMethod);
-    if (isOrderAlreadySubmitted(orderId)) {
-        alert('⏱️ Pesanan ini sudah dikirim baru-baru ini.');
-        return;
-    }
-
-    let qtyOri = 0, qtyNori = 0, qtySpicy = 0, total = 0;
-    cart.forEach(function(item) {
-        if (item.name === "Si' Ori") qtyOri = item.quantity;
-        else if (item.name === "Si' Nori") qtyNori = item.quantity;
-        else if (item.name === "Si' Spicy") qtySpicy = item.quantity;
-        total += item.price * item.quantity;
-    });
-
-    const salesCode = document.getElementById('salesCode').value || 'Direct';
-    const dateObj = new Date(pickupDate + 'T00:00:00');
-    const tanggalFormatted = dateObj.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-    let message = '*🛍️ PESANAN SI DOPA - SINGKONG CRUNCHY BALLS*\n\n';
-    message += '*👤 DATA PEMESAN:*\n';
-    message += 'Nama: ' + buyerName + '\n';
-    message += 'Sales: ' + salesCode + '\n';
-    message += 'Tempat Ambil: ' + pickupLocation + '\n';
-    message += 'Tanggal Ambil: ' + tanggalFormatted + '\n';
-    message += 'Metode Bayar: ' + paymentMethod + '\n\n';
-    message += '*📋 DETAIL PESANAN:*\n';
-    cart.forEach(function(item, index) {
-        const itemTotal = item.price * item.quantity;
-        message += (index + 1) + '. ' + item.name + '\n';
-        message += '   Qty: ' + item.quantity + ' × Rp ' + item.price.toLocaleString('id-ID') + ' = Rp ' + itemTotal.toLocaleString('id-ID') + '\n';
-    });
-    message += '\n*━━━━━━━━━━━━━━━━*\n';
-    message += '💰 *Total: Rp ' + total.toLocaleString('id-ID') + '*\n';
-    message += '*━━━━━━━━━━━━━━━━*\n\n';
-    message += 'Terima kasih telah memesan! 🙏';
-
-    const whatsappUrl = 'https://wa.me/6283170951060?text=' + encodeURIComponent(message);
-    const waWindow = window.open(whatsappUrl, '_blank');
-
-    if (waWindow) {
-        setTimeout(function() {
-            submitToGoogleForm(buyerName, pickupLocation, pickupDate, paymentMethod, qtyOri, qtyNori, qtySpicy, total, salesCode, orderId);
-        }, 100);
-    } else {
-        alert('❌ Browser memblokir popup. Izinkan popup lalu coba lagi.');
-    }
-}
-
-function submitToGoogleForm(nama, lokasi, tanggal, metode, qtyOri, qtyNori, qtySpicy, total, salesCode, orderId) {
-    const formId = '1FAIpQLSeDVnEzdZpBGgj3Rds39SQZOCXWox_vuA6g7-okAjvNPJ__9A';
-    const formData = new FormData();
-    formData.append('entry.39058957', nama);
-    formData.append('entry.269585913', lokasi);
-    formData.append('entry.894911535', tanggal);
-    formData.append('entry.1323778650', metode);
-    formData.append('entry.168921694', qtyOri);
-    formData.append('entry.1437324933', qtyNori);
-    formData.append('entry.1514945499', qtySpicy);
-    formData.append('entry.560903875', total);
-    formData.append('entry.1712031817', salesCode);
-
-    fetch('https://docs.google.com/forms/d/e/' + formId + '/formResponse', {
-        method: 'POST',
-        body: formData,
-        mode: 'no-cors'
-    }).then(function() {
-        markOrderAsSubmitted(orderId);
-        cart = [];
-        updateCart();
-        document.getElementById('buyerName').value = '';
-        document.getElementById('pickupLocation').value = '';
-        document.getElementById('pickupDate').value = '';
-        document.getElementById('paymentMethod').value = '';
-        alert('✅ Pesanan berhasil dikirim! Lanjutkan konfirmasi di WhatsApp.');
-    }).catch(function(err) {
-        console.error('❌ Error Google Form:', err);
-    });
-}
-
-// ==================== INIT ====================
-function getUrlParameter(name) {
-    return new URLSearchParams(window.location.search).get(name);
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('pickupDate').setAttribute('min', today);
-
-    const salesCode = getUrlParameter('sales') || getUrlParameter('ref');
-    if (salesCode) {
-        document.getElementById('salesCode').value = salesCode;
-    }
-
-    console.log('📡 Fetching stock data...');
+    // Refresh stok langsung setelah order
     fetchStockFromSpreadSheet();
-});
 
-updateCart();
+    alert("✅ Pesanan berhasil dikirim! Lanjutkan konfirmasi di WhatsApp.");
+
+  } catch (err) {
+    console.error("Submit order gagal:", err);
+    alert("❌ Gagal mengirim pesanan. Coba lagi.");
+  }
+}
     </script>
 </body>
 
