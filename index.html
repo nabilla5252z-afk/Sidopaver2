@@ -926,6 +926,14 @@
         <p>✅Si Dopa akan memberikan pengalaman lawan jenuh dan stressnya bekerja atau belajar melalui teksturnya yang
             renyah </p>
         <p>✅Sensasi varian rasa yang buat kamu kembali fokus dan enjoy dengan aktivitasmu</p>
+        
+        <!-- Total Stock Display -->
+        <div style="margin-top: 30px; padding: 15px 20px; background: rgba(255,255,255,0.2); border-left: 4px solid #11998e; border-radius: 8px; display: inline-block;">
+            <p style="font-size: 0.9em; color: #333; margin-bottom: 5px;">📊 Total Stok Tersedia:</p>
+            <p style="font-size: 2em; font-weight: bold; color: #11998e; margin: 0;">
+                <span id="totalStockDisplay">-</span> unit
+            </p>
+        </div>
     </div>
 
     <!-- Pre Order Info Box -->
@@ -1178,6 +1186,7 @@
                 const lines = csv.split("\n");
 
                 let stockOri = 0, stockNori = 0, stockSpicy = 0;
+                let totalStock = 0;
 
                 lines.slice(1).forEach(line => {
                     if (!line.trim()) return;
@@ -1190,16 +1199,24 @@
                     else if (name.includes("spicy")) stockSpicy = qty;
                 });
 
+                // Hitung total stock
+                totalStock = stockOri + stockNori + stockSpicy;
+
                 updateStockBadges(stockOri, stockNori, stockSpicy);
+                updateTotalStockDisplay(totalStock);
+                
                 console.log("✅ Stok berhasil diupdate dari Google Sheets!");
                 console.log(`📊 Si' Ori: ${stockOri}, Si' Nori: ${stockNori}, Si' Spicy: ${stockSpicy}`);
+                console.log(`📈 Total Stok: ${totalStock}`);
 
             } catch(err) {
                 console.error("❌ Fetch gagal, pakai localStorage:", err.message);
                 const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
                 const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
                 const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
+                const totalStock = stockOri + stockNori + stockSpicy;
                 updateStockBadges(stockOri, stockNori, stockSpicy);
+                updateTotalStockDisplay(totalStock);
             }
         }
 
@@ -1237,6 +1254,25 @@
                 btn.textContent = 'Tambah ke Keranjang';
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
+            }
+        }
+
+        function updateTotalStockDisplay(totalStock) {
+            const totalElement = document.getElementById('totalStockDisplay');
+            if (totalElement) {
+                totalElement.textContent = totalStock;
+                
+                // Update warna berdasarkan stock status
+                if (totalStock === 0) {
+                    totalElement.style.color = '#ff6b6b';
+                    totalElement.parentElement.style.borderColor = '#ff6b6b';
+                } else if (totalStock <= 10) {
+                    totalElement.style.color = '#ffa500';
+                    totalElement.parentElement.style.borderColor = '#ffa500';
+                } else {
+                    totalElement.style.color = '#11998e';
+                    totalElement.parentElement.style.borderColor = '#11998e';
+                }
             }
         }
 
