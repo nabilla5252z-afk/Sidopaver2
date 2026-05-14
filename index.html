@@ -1092,7 +1092,7 @@
     </div>
 
     <script>
-        async function fetchStockFromGoogleSheets() {
+        async function fetchStockFromSpreadsheet() {
 
             const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
 
@@ -1100,38 +1100,18 @@
 
                 const res = await fetch(url);
 
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
+                const csv = await res.text();
 
-                const csvText = await res.text();
+                console.log(csv);
 
-                const parsed = Papa.parse(csvText, {
-                    header: true,
-                    skipEmptyLines: true
-                });
+                const lines = csv.split("\n");
 
-                console.log("CSV RESULT:", parsed.data);
+                lines.slice(1).forEach(line => {
 
-                const rows = parsed.data;
+                    const cols = line.split(",");
 
-                rows.forEach((stock) => {
-
-                    const name =
-                        stock.name ||
-                        stock.Name ||
-                        stock.NAMA ||
-                        stock.nama;
-
-                    const quantity =
-                        stock.quantity ||
-                        stock.Quantity ||
-                        stock.qty ||
-                        stock.QTY;
-
-                    if (!name) return;
-
-                    const qty = parseInt(quantity) || 0;
+                    const name = cols[0]?.trim();
+                    const qty = parseInt(cols[1]) || 0;
 
                     let badgeId = "";
 
@@ -1149,39 +1129,70 @@
 
                     const badge = document.getElementById(badgeId);
 
-                    if (badge) {
+                    badge.textContent = `Stok: ${qty}`;
 
-                        badge.textContent = `Stok: ${qty}`;
+                    badge.className =
+                        qty === 0
+                            ? "stock-badge out"
+                            : "stock-badge";
 
-                        badge.className =
-                            qty === 0
-                                ? "stock-badge out"
-                                : "stock-badge";
+                    console.log(name, qty);
 
-                        console.log(`✅ ${name}: ${qty}`);
-                    }
                 });
 
-                console.log("✅ Spreadsheet loaded");
+            } catch(err) {
 
-            } catch (error) {
-
-                console.error("❌ ERROR:", error);
+                console.error(err);
 
             }
         }
 
         document.addEventListener('DOMContentLoaded', function () {
 
-            // loader
             document.getElementById("stockBadgeOri").textContent = "Loading...";
             document.getElementById("stockBadgeNori").textContent = "Loading...";
             document.getElementById("stockBadgeSpicy").textContent = "Loading...";
 
-            fetchStockFromGoogleSheets();
+            fetchStockFromSpreadsheet();
 
         });
+        /*
+        async function fetchStockFromSpreadsheet() {
+            console.log("🔄 Mulai fetch data...");
 
+            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
+
+            try {
+                const res = await fetch(url);
+                console.log("📡 Response status:", res.status);
+
+                const csv = await res.text();
+                console.log("📄 Isi CSV (5 karakter pertama):", csv.substring(0, 100));
+
+                const lines = csv.split("\n");
+                console.log("📊 Jumlah baris:", lines.length);
+
+                lines.slice(1).forEach((line, index) => {
+                    const cols = line.split(",");
+                    const name = cols[0]?.trim();
+                    const qty = parseInt(cols[1]) || 0;
+                    console.log(`Baris ${index + 1}: name="${name}", qty=${qty}`);
+
+                    // ... sisa kode
+                });
+
+            } catch(err) {
+                console.error("❌ Fetch gagal:", err.message);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("✅ DOM siap");
+            fetchStockFromSpreadsheet().catch(err => {
+                console.error("❌ Error utama:", err);
+            });
+        });
+        */
         let cart = [];
         let lastSubmitTime = 0; // Untuk mencegah double submit
         let pendingSubmit = null; // Untuk track pending submission
