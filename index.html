@@ -1185,18 +1185,34 @@
                 const csv = await res.text();
                 const lines = csv.split("\n");
 
+                console.log("📥 Raw CSV Data dari Sheet:");
+                console.log(csv);
+                console.log("📊 Parsed Lines:");
+                lines.forEach((line, idx) => console.log(`Line ${idx}: ${line}`));
+
                 let stockOri = 0, stockNori = 0, stockSpicy = 0;
                 let totalStock = 0;
 
-                lines.slice(1).forEach(line => {
+                lines.slice(1).forEach((line, idx) => {
                     if (!line.trim()) return;
                     const cols = line.split(",");
                     const name = cols[0]?.trim().toLowerCase();
                     const qty = parseInt(cols[1]) || 0;
 
-                    if (name.includes("ori")) stockOri = qty;
-                    else if (name.includes("nori")) stockNori = qty;
-                    else if (name.includes("spicy")) stockSpicy = qty;
+                    console.log(`Row ${idx}: name="${cols[0]}" (parsed: "${name}"), qty="${cols[1]}" (parsed: ${qty})`);
+
+                    if (name.includes("ori")) {
+                        stockOri = qty;
+                        console.log(`✅ Si' Ori matched: ${stockOri}`);
+                    }
+                    else if (name.includes("nori")) {
+                        stockNori = qty;
+                        console.log(`✅ Si' Nori matched: ${stockNori}`);
+                    }
+                    else if (name.includes("spicy")) {
+                        stockSpicy = qty;
+                        console.log(`✅ Si' Spicy matched: ${stockSpicy}`);
+                    }
                 });
 
                 // Hitung total stock
