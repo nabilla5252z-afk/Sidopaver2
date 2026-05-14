@@ -1171,9 +1171,7 @@
         }
 
         async function fetchStockFromSpreadSheet() {
-
             const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
-
             try {
                 const res = await fetch(url);
                 const csv = await res.text();
@@ -1268,12 +1266,17 @@
 
         // ==================== STOK VALIDATION ====================
         function validateStockBeforeAddToCart(productName) {
-            let stock = 0;
-            if (productName === 'Si\' Ori') stock = parseInt(localStorage.getItem('stock_ori')) || 0;
-            else if (productName === 'Si\' Nori') stock = parseInt(localStorage.getItem('stock_nori')) || 0;
-            else if (productName === 'Si\' Spicy') stock = parseInt(localStorage.getItem('stock_spicy')) || 0;
+            let badgeId = '';
+            if (productName === 'Si\' Ori') badgeId = 'stockBadgeOri';
+            else if (productName === 'Si\' Nori') badgeId = 'stockBadgeNori';
+            else if (productName === 'Si\' Spicy') badgeId = 'stockBadgeSpicy';
 
-            return stock > 0;
+            const badge = document.getElementById(badgeId);
+            // Ambil angka dari teks "Stok: 10" → hasilnya 10
+            const stokText = badge.textContent; // "Stok: 10"
+            const qty = parseInt(stokText.replace('Stok:', '').trim()) || 0;
+
+            return qty > 0;
         }
 
         // ==================== CART FUNCTIONS ====================
