@@ -1101,9 +1101,7 @@
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }
-
                 const csvText = await res.text();
-
                 const parsed = Papa.parse(csvText, {
                     header: true
                 });
@@ -1112,43 +1110,28 @@
 
                 // Mapping nama produk -> id badge HTML
                 const badgeMap = {
-                    "Si' Ori": "stockBadgeOri",
-                    "Si' Nori": "stockBadgeNori",
-                    "Si' Spicy": "stockBadgeSpicy"
+                    "SiOri": "stockBadgeOri",
+                    "SiNori": "stockBadgeNori",
+                    "SiSpicy": "stockBadgeSpicy"
                 };
 
                 rows.forEach((stock) => {
-
                     if (!stock.name || stock.name.trim() === "") return;
-
                     const badgeId = badgeMap[stock.name];
-
                     if (!badgeId) return;
-
                     const badge = document.getElementById(badgeId);
-
                     if (badge) {
-
                         const qty = parseInt(stock.quantity) || 0;
-
-                        // Update text
                         badge.textContent = `Stok: ${qty}`;
-
-                        // Update class
                         badge.className = qty === 0
                             ? 'stock-badge out'
                             : 'stock-badge';
-
                         console.log(`✅ ${stock.name} loaded: ${qty} unit`);
                     }
                 });
-
                 console.log('✅ Data dari Google Sheets loaded successfully');
-
             } catch (error) {
-
                 console.error('❌ Error fetching from Google Sheets:', error);
-
                 loadLocalData();
             }
         }
