@@ -1170,7 +1170,7 @@
         }
 
         async function fetchStockFromSpreadSheet() {
-            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQw5GMNl4EFeG02Ss4PtJafITYQLsGr0rdH3v-ndSEBM7gFE1U4Dv2r_yag_bkesX0UFfvPVWDJSb_1/pub?output=csv";
+            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAycdhOR0QM_nhTxe3DR4R22EKBbmJ-vEX79Td0mAHSlsmkatIuPYbXZ70y46fGl6lMCKEepGDjspx/pub?gid=1401949523&single=true&output=csv";
             try {
                 const res = await fetch(url);
                 const csv = await res.text();
