@@ -1107,81 +1107,80 @@
                 const csvText = await res.text();
 
                 const parsed = Papa.parse(csvText, {
-                    header: true
+                    header: true,
+                    skipEmptyLines: true
                 });
+
+                console.log("CSV RESULT:", parsed.data);
 
                 const rows = parsed.data;
 
-                // Mapping spreadsheet -> badge HTML
-                const badgeMap = {
-                    "SiOri": "stockBadgeOri",
-                    "SiNori": "stockBadgeNori",
-                    "SiSpicy": "stockBadgeSpicy"
-                };
-
-                // Simpan stock sementara
-                let stockOri = 0;
-                let stockNori = 0;
-                let stockSpicy = 0;
-
                 rows.forEach((stock) => {
 
-                    if (!stock.name || stock.name.trim() === "") return;
+                    const name =
+                        stock.name ||
+                        stock.Name ||
+                        stock.NAMA ||
+                        stock.nama;
 
-                    const qty = parseInt(stock.quantity) || 0;
+                    const quantity =
+                        stock.quantity ||
+                        stock.Quantity ||
+                        stock.qty ||
+                        stock.QTY;
 
-                    // Cari badge
-                    const badgeId = badgeMap[stock.name];
+                    if (!name) return;
+
+                    const qty = parseInt(quantity) || 0;
+
+                    let badgeId = "";
+
+                    if (name === "SiOri") {
+                        badgeId = "stockBadgeOri";
+                    }
+                    else if (name === "SiNori") {
+                        badgeId = "stockBadgeNori";
+                    }
+                    else if (name === "SiSpicy") {
+                        badgeId = "stockBadgeSpicy";
+                    }
 
                     if (!badgeId) return;
 
-                    // Update badge
                     const badge = document.getElementById(badgeId);
 
                     if (badge) {
 
                         badge.textContent = `Stok: ${qty}`;
 
-                        badge.className = qty === 0
-                            ? 'stock-badge out'
-                            : 'stock-badge';
+                        badge.className =
+                            qty === 0
+                                ? "stock-badge out"
+                                : "stock-badge";
 
-                        console.log(`✅ ${stock.name} loaded: ${qty} unit`);
-                    }
-
-                    // Simpan ke variabel stock
-                    if (stock.name === "SiOri") {
-                        stockOri = qty;
-                    }
-
-                    if (stock.name === "SiNori") {
-                        stockNori = qty;
-                    }
-
-                    if (stock.name === "SiSpicy") {
-                        stockSpicy = qty;
+                        console.log(`✅ ${name}: ${qty}`);
                     }
                 });
 
-                // Update tombol add to cart
-                updateAddButtonState("Si' Ori", stockOri);
-                updateAddButtonState("Si' Nori", stockNori);
-                updateAddButtonState("Si' Spicy", stockSpicy);
-
-                console.log('✅ Data Google Sheets berhasil dimuat');
+                console.log("✅ Spreadsheet loaded");
 
             } catch (error) {
 
-                console.error('❌ Error fetching Google Sheets:', error);
+                console.error("❌ ERROR:", error);
 
-                // fallback localStorage
-                const stockOri = parseInt(localStorage.getItem('stock_ori')) || 0;
-                const stockNori = parseInt(localStorage.getItem('stock_nori')) || 0;
-                const stockSpicy = parseInt(localStorage.getItem('stock_spicy')) || 0;
-
-                updateStockBadges(stockOri, stockNori, stockSpicy);
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // loader
+            document.getElementById("stockBadgeOri").textContent = "Loading...";
+            document.getElementById("stockBadgeNori").textContent = "Loading...";
+            document.getElementById("stockBadgeSpicy").textContent = "Loading...";
+
+            fetchStockFromGoogleSheets();
+
+        });
 
         let cart = [];
         let lastSubmitTime = 0; // Untuk mencegah double submit
