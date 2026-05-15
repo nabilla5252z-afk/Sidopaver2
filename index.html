@@ -1122,10 +1122,22 @@ function toggleBtn(id, stok) {
 // ─── KIRIM PESANAN KE SPREADSHEET ──────────────────────
 async function submitOrderToSheet(orderData) {
   try {
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify({ ...orderData, key: API_KEY, action: "submitOrder" })
+    // Susun semua data jadi parameter URL
+    const params = new URLSearchParams({
+      action: "submitOrder",
+      key: API_KEY,
+      nama: orderData.nama,
+      lokasi: orderData.lokasi,
+      tanggal: orderData.tanggal,
+      metode: orderData.metode,
+      qtyOri: orderData.qtyOri,
+      qtyNori: orderData.qtyNori,
+      qtySpicy: orderData.qtySpicy,
+      total: orderData.total,
+      salesCode: orderData.salesCode
     });
+
+    const res = await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`);
     const data = await res.json();
     return data;
   } catch (err) {
