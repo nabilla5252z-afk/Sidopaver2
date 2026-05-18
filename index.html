@@ -1255,30 +1255,59 @@ async function openWhatsApp() {
     return;
   }
 
-  const total    = cart.reduce((sum, i) => sum + i.subtotal, 0);
-  const qtyOri   = cart.find(i => i.name === "Si' Ori")?.qty   || 0;
-  const qtyNori  = cart.find(i => i.name === "Si' Nori")?.qty  || 0;
-  const qtySpicy = cart.find(i => i.name === "Si' Spicy")?.qty || 0;
+  // 1. Ambil elemen tombol checkout & simpan teks aslinya
+  const checkoutBtn = document.getElementById("checkoutBtn");
+  const originalText = checkoutBtn.innerHTML;
 
-  // Kirim ke spreadsheet PEMESANAN
-  await submitOrderToSheet({
-    nama, lokasi, tanggal, metode,
-    qtyOri, qtyNori, qtySpicy, total,
-    salesCode: document.getElementById("salesCode")?.value || "Direct"
-  });
+  try {
+    // 2. KUNCI TOMBOL SEGERA (Cegah klik ganda/triple)
+    checkoutBtn.disabled = true;
+    checkoutBtn.style.opacity = "0.6"; // Membuat tombol terlihat buram/loading
+    checkoutBtn.style.pointerEvents = "none"; // Pengaman ekstra di level CSS
+    checkoutBtn.innerHTML = "<span>Memproses Pesanan... Mohon Tunggu</span>";
 
+    const total    = cart.reduce((sum, i) => sum + i.subtotal, 0);
+    const qtyOri   = cart.find(i => i.name === "Si' Ori")?.qty   || 0;
+    const qtyNori  = cart.find(i => i.name === "Si' Nori")?.qty  || 0;
+    const qtySpicy = cart.find(i => i.name === "Si' Spicy")?.qty || 0;
 
-  // Buka WhatsApp
-  const pesanWA =
-    `Halo Si Dopa! Saya mau pesan:\n\n` +
-    cart.map(i => `• ${i.name} x${i.qty} = Rp ${i.subtotal.toLocaleString("id-ID")}`).join("\n") +
-    `\n\nTotal: Rp ${total.toLocaleString("id-ID")}` +
-    `\nNama: ${nama}` +
-    `\nAmbil: ${lokasi}` +
-    `\nTanggal: ${tanggal}` +
-    `\nPembayaran: ${metode}`;
+    // 3. Kirim ke spreadsheet PEMESANAN (Proses yang memicu delay)
+    await submitOrderToSheet({
+      nama, lokasi, tanggal, metode,
+      qtyOri, qtyNori, qtySpicy, total,
+      salesCode: document.getElementById("salesCode")?.value || "Direct"
+    });
 
-  window.open(`https://wa.me/6283170951060?text=${encodeURIComponent(pesanWA)}`, "_blank");
+    // 💡 CATATAN: Fungsi kurangiStok() kamu belum dipanggil di kode asli. 
+    // Jika ingin stok di sheet otomatis berkurang saat checkout, buka komentar di bawah ini:
+    // await kurangiStok(qtyOri, qtyNori, qtySpicy);
+
+    // 4. Buka WhatsApp setelah data sukses masuk ke Google Sheet
+    const pesanWA =
+      `Halo Si Dopa! Saya mau pesan:\n\n` +
+      cart.map(i => `• ${i.name} x${i.qty} = Rp ${i.subtotal.toLocaleString("id-ID")}`).join("\n") +
+      `\n\nTotal: Rp ${total.toLocaleString("id-ID")}` +
+      `\nNama: ${nama}` +
+      `\nAmbil: ${lokasi}` +
+      `\nTanggal: ${tanggal}` +
+      `\nPembayaran: ${metode}`;
+
+    window.open(`https://wa.me/6283170951060?text=${encodeURIComponent(pesanWA)}`, "_blank");
+
+    // 5. Kosongkan keranjang belanja agar user tidak sengaja re-order isi yang sama
+    cart = [];
+    renderCart();
+
+  } catch (err) {
+    console.error("Proses checkout terganggu:", err);
+    alert("Terjadi masalah jaringan. Silakan coba klik kembali.");
+    
+    // 6. KEMBALIKAN TOMBOL JIKA GAGAL (Supaya user bisa mencoba mengirim ulang)
+    checkoutBtn.disabled = false;
+    checkoutBtn.style.opacity = "1";
+    checkoutBtn.style.pointerEvents = "auto";
+    checkoutBtn.innerHTML = originalText;
+  }
 
   // Refresh tampilan stok setelah 4 detik
   setTimeout(loadStock, 4000);
