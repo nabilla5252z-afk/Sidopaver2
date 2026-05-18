@@ -1,1260 +1,1260 @@
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Si Dopa - Singkong Crunchy Balls</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Adigiana Toybox', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
-            color: #333;
-            line-height: 1.6;
-        }
-
-        header {
-            background: linear-gradient(135deg, #FF9800 0%, #FF6F00 100%);
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
-        }
-
-        header h1 {
-            font-size: 2.5em;
-            margin: 0;
-            margin-bottom: 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-
-        header h1 img {
-            display: block;
-            margin: 0 auto -45px;
-            max-width: 100%;
-            width: 300px;
-            height: 400px;
-            object-fit: contain;
-        }
-
-        header p {
-            font-size: 1.1em;
-            opacity: 1;
-            color: #FFFFFF;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        @media (max-width: 768px) {
-            header {
-                padding: 12px 0;
-            }
-
-            header h1 {
-                height: 100px;
-                font-size: 1.5em;
-            }
-
-            header h1 img {
-                width: 160px;
-                height: 160px;
-                margin: 0 auto -28px;
-            }
-
-            header p {
-                font-size: 0.85em;
-                padding: 0 10px;
-            }
-        }
-
-        .hero {
-            background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url('assets/images/hero-background.jpg') no-repeat center center;
-            background-size: cover;
-            background-attachment: fixed;
-            color: rgb(50, 19, 0);
-            padding: 60px 20px;
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .hero h2 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            font-size: 1.2em;
-            margin-bottom: 5px;
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                padding: 30px 12px;
-                margin-bottom: 25px;
-                background-attachment: scroll;
-            }
-
-            .hero h2 {
-                font-size: 1.3em;
-                margin-bottom: 8px;
-            }
-
-            .hero p {
-                font-size: 0.9em;
-                margin-bottom: 3px;
-            }
-        }
-
-        .container {
-            display: flex;
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-            margin-bottom: 50px;
-        }
-
-        .products-section {
-            flex: 1;
-            min-width: 0;
-        }
-
-        /* Alternating Large Grid */
-        .alternating-grid {
-            display: grid;
-            gap: 40px;
-        }
-
-        .product-item {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-        }
-
-        .product-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .product-item:nth-child(even) {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .product-item:nth-child(even) .product-image {
-            order: 2;
-        }
-
-        .product-item:nth-child(even) .product-content {
-            order: 1;
-        }
-
-        .product-image {
-            background: linear-gradient(135deg, #FFB74D 0%, #FF9800 100%);
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 120px;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: bold;
-            overflow: hidden;
-        }
-
-        .product-image img {
-            max-width: 100%;
-            max-height: 100%;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-        }
-
-        .product-content {
-            padding: 40px;
-        }
-
-        .product-content h3 {
-            font-size: 1.8em;
-            color: #FF6F00;
-            margin-bottom: 10px;
-        }
-
-        .product-description {
-            color: #666;
-            margin-bottom: 20px;
-            font-size: 1em;
-            line-height: 1.8;
-        }
-
-        .benefit-tag {
-            display: inline-block;
-            background: #FFE0B2;
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-            color: #FF6F00;
-            font-weight: 500;
-        }
-
-        .product-content .price {
-            font-size: 1.5em;
-            color: #FF6F00;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .quantity-selector button {
-            background: #FF9800;
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1em;
-            transition: background 0.3s ease;
-        }
-
-        .quantity-selector button:hover {
-            background: #FF6F00;
-        }
-
-        .quantity-selector input {
-            width: 60px;
-            padding: 8px;
-            border: 2px solid #FF9800;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 1em;
-        }
-
-        .add-to-cart-btn {
-            background: linear-gradient(135deg, #FF9800 0%, #FF6F00 100%);
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            width: 100%;
-            font-weight: bold;
-        }
-
-        .add-to-cart-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
-        }
-
-        /* Sidebar Keranjang - STICKY */
-        .cart-sidebar {
-            width: 350px;
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-            background: #FFFAF0;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(255, 152, 0, 0.15);
-            padding: 30px;
-            border-top: 4px solid #FF9800;
-        }
-
-        .cart-sidebar h2 {
-            color: #FF6F00;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 3px solid #FF9800;
-            padding-bottom: 10px;
-        }
-
-        .cart-items {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-        }
-
-        .cart-item {
-            background: #FFE0B2;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9em;
-            border-left: 4px solid #FF9800;
-        }
-
-        .cart-item-name {
-            font-weight: bold;
-            color: #333;
-            flex: 1;
-        }
-
-        .cart-item-qty {
-            color: #FF9800;
-            font-weight: bold;
-            margin: 0 8px;
-        }
-
-        .cart-item-price {
-            color: #FF6F00;
-            font-weight: bold;
-        }
-
-        .remove-item {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 0.8em;
-            margin-left: 8px;
-            transition: background 0.3s ease;
-        }
-
-        .remove-item:hover {
-            background: #ff5252;
-        }
-
-        .cart-summary {
-            border-top: 2px solid #e0e0e0;
-            padding-top: 20px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 0.95em;
-        }
-
-        .summary-row.total {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #FF6F00;
-            margin-top: 15px;
-            border-top: 3px solid #FF9800;
-            padding-top: 10px;
-        }
-
-        .checkout-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .checkout-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.5);
-        }
-
-        .checkout-btn svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        .empty-cart-message {
-            text-align: center;
-            color: #999;
-            padding: 20px;
-            font-size: 0.9em;
-        }
-
-        /* Form Pesanan */
-        .order-form {
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 3px solid #FF9800;
-        }
-
-        .order-form h3 {
-            color: #FF6F00;
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #FF6F00;
-            font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 0.9em;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #FFE0B2;
-            border-radius: 8px;
-            font-size: 0.95em;
-            background: white;
-            color: #333;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #FF9800;
-            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
-        }
-
-        .form-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 20px;
-            padding-right: 35px;
-            color: #FF6F00;
-        }
-
-        .form-group input[type="date"] {
-            color: #FF6F00;
-            font-weight: 500;
-        }
-
-        .form-group input::placeholder {
-            color: #999;
-        }
-
-        .sk-text {
-            font-size: 0.8em;
-            color: #FF9800;
-            margin-top: 5px;
-            font-style: italic;
-        }
-
-        .form-note {
-            background: #FFF3E0;
-            border-left: 4px solid #FF9800;
-            padding: 10px 12px;
-            border-radius: 6px;
-            font-size: 0.85em;
-            color: #FF6F00;
-            margin-bottom: 15px;
-        }
-
-        .hidden-sales-input {
-            display: none;
-        }
-
-        @media (max-width: 1024px) {
-            .container {
-                gap: 15px;
-            }
-
-            .cart-sidebar {
-                width: 300px;
-                padding: 20px;
-            }
-
-            .product-item {
-                grid-template-columns: 1fr !important;
-            }
-
-            .product-item:nth-child(even) .product-image {
-                order: 1;
-            }
-
-            .product-item:nth-child(even) .product-content {
-                order: 2;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                gap: 12px;
-                padding: 0 10px;
-                margin-bottom: 25px;
-                flex-direction: column;
-            }
-
-            .products-section {
-                flex: 1;
-            }
-
-            .cart-sidebar {
-                width: 100%;
-                padding: 15px;
-                top: auto;
-                position: relative;
-                max-height: 250px;
-            }
-
-            .cart-sidebar h2 {
-                font-size: 1.1em;
-                margin-bottom: 12px;
-            }
-
-            .cart-items {
-                max-height: 300px;
-                margin-bottom: 12px;
-            }
-
-            .cart-item {
-                font-size: 0.8em;
-                padding: 8px;
-                margin-bottom: 8px;
-            }
-
-            .product-item {
-                gap: 0;
-            }
-
-            .product-image {
-                min-height: 200px;
-            }
-
-            .product-content {
-                padding: 15px;
-            }
-
-            .product-content h3 {
-                font-size: 1.3em;
-                margin-bottom: 8px;
-            }
-
-            .product-description {
-                font-size: 0.85em;
-                margin-bottom: 12px;
-                line-height: 1.5;
-            }
-
-            .benefit-tag {
-                font-size: 0.8em;
-                padding: 6px 12px;
-                margin-bottom: 12px;
-            }
-
-            .price {
-                font-size: 1.1em;
-                margin-bottom: 12px;
-            }
-
-            .quantity-selector button {
-                width: 35px;
-                height: 35px;
-                font-size: 0.9em;
-            }
-
-            .quantity-selector input {
-                width: 50px;
-                font-size: 0.9em;
-            }
-
-            .add-to-cart-btn {
-                font-size: 0.9em;
-                padding: 10px 15px;
-            }
-
-            .order-form {
-                margin-top: 15px;
-                padding-top: 15px;
-            }
-
-            .order-form h3 {
-                font-size: 0.95em;
-                margin-bottom: 12px;
-            }
-
-            .form-group {
-                margin-bottom: 10px;
-            }
-
-            .form-group label {
-                font-size: 0.8em;
-                margin-bottom: 4px;
-            }
-
-            .form-group input,
-            .form-group select {
-                font-size: 0.85em;
-                padding: 8px 10px;
-            }
-
-            .summary-row {
-                font-size: 0.85em;
-                margin-bottom: 8px;
-            }
-
-            .summary-row.total {
-                font-size: 1em;
-            }
-
-            .checkout-btn {
-                font-size: 0.95em;
-                padding: 12px;
-                margin-top: 12px;
-            }
-
-            .checkout-btn svg {
-                width: 18px;
-                height: 18px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                gap: 10px;
-                padding: 0 8px;
-            }
-
-            .cart-sidebar {
-                width: 240px;
-                padding: 12px;
-            }
-        }
-
-        /* Admin Panel Styling */
-        .admin-panel-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .admin-panel-overlay.active {
-            display: flex;
-        }
-
-        .admin-panel-modal {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .admin-panel-modal h2 {
-            color: #FF6F00;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-            border-bottom: 3px solid #FF9800;
-            padding-bottom: 10px;
-        }
-
-        .admin-form-group {
-            margin-bottom: 15px;
-        }
-
-        .admin-form-group label {
-            display: block;
-            color: #FF6F00;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 0.95em;
-        }
-
-        .admin-form-group input,
-        .admin-form-group select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #FFE0B2;
-            border-radius: 8px;
-            font-size: 0.95em;
-            background: white;
-            color: #333;
-            transition: border-color 0.3s ease;
-            font-family: inherit;
-        }
-
-        .admin-form-group input:focus,
-        .admin-form-group select:focus {
-            outline: none;
-            border-color: #FF9800;
-            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
-        }
-
-        .admin-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .admin-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .admin-btn-save {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-        }
-
-        .admin-btn-save:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.3);
-        }
-
-        .admin-btn-close {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        .admin-btn-close:hover {
-            background: #d0d0d0;
-        }
-
-        .stock-badge {
-            display: inline-block;
-            background: #11998e;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-
-        .stock-badge.out {
-            background: #ff6b6b;
-        }
-
-        /* Pre Order Info Box */
-        .preorder-info-box {
-            background: white;
-            border: 3px solid #FF9800;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.1);
-        }
-
-        .preorder-info-box h3 {
-            color: #FF6F00;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .preorder-info-row {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-
-        .preorder-info-item {
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .preorder-info-item label {
-            display: block;
-            color: #FF9800;
-            font-weight: bold;
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-
-        .preorder-info-item value {
-            display: block;
-            color: #333;
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-
-        .admin-access-hint {
-            font-size: 0.8em;
-            color: #ccc;
-            cursor: pointer;
-            user-select: none;
-            margin-top: 15px;
-        }
-
-        @media (max-width: 768px) {
-            .preorder-info-box {
-                margin: 15px 10px;
-                padding: 15px;
-            }
-
-            .preorder-info-item {
-                min-width: 120px;
-            }
-
-            .admin-panel-modal {
-                padding: 20px;
-            }
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-</head>
-
-<body>
-    <!-- Admin Panel Overlay -->
-    <div class="admin-panel-overlay" id="adminPanelOverlay">
-        <div class="admin-panel-modal">
-            <h2 id="adminPanelTitle">Admin Panel</h2>
-
-            <!-- Tab untuk switch antara Stok dan Pre Order -->
-            <div
-                style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #FFE0B2; padding-bottom: 10px;">
-                <button onclick="switchAdminTab('stock')" id="tabStockBtn"
-                    style="flex: 1; padding: 10px; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📦
-                    Stok</button>
-                <button onclick="switchAdminTab('preorder')" id="tabPreorderBtn"
-                    style="flex: 1; padding: 10px; background: #FFE0B2; color: #FF6F00; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📅
-                    Pre Order</button>
+        <!DOCTYPE html>
+        <html lang="id">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Si Dopa - Singkong Crunchy Balls</title>
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Adigiana Toybox', Tahoma, Geneva, Verdana, sans-serif;
+                    background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+                    color: #333;
+                    line-height: 1.6;
+                }
+
+                header {
+                    background: linear-gradient(135deg, #FF9800 0%, #FF6F00 100%);
+                    color: white;
+                    padding: 20px 0;
+                    text-align: center;
+                    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+                }
+
+                header h1 {
+                    font-size: 2.5em;
+                    margin: 0;
+                    margin-bottom: 0;
+                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+                    height: 160px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0;
+                }
+
+                header h1 img {
+                    display: block;
+                    margin: 0 auto -45px;
+                    max-width: 100%;
+                    width: 300px;
+                    height: 400px;
+                    object-fit: contain;
+                }
+
+                header p {
+                    font-size: 1.1em;
+                    opacity: 1;
+                    color: #FFFFFF;
+                    font-weight: 700;
+                    letter-spacing: 0.5px;
+                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+                }
+
+                @media (max-width: 768px) {
+                    header {
+                        padding: 12px 0;
+                    }
+
+                    header h1 {
+                        height: 100px;
+                        font-size: 1.5em;
+                    }
+
+                    header h1 img {
+                        width: 160px;
+                        height: 160px;
+                        margin: 0 auto -28px;
+                    }
+
+                    header p {
+                        font-size: 0.85em;
+                        padding: 0 10px;
+                    }
+                }
+
+                .hero {
+                    background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url('assets/images/hero-background.jpg') no-repeat center center;
+                    background-size: cover;
+                    background-attachment: fixed;
+                    color: rgb(50, 19, 0);
+                    padding: 60px 20px;
+                    text-align: center;
+                    margin-bottom: 50px;
+                }
+
+                .hero h2 {
+                    font-size: 2em;
+                    margin-bottom: 10px;
+                }
+
+                .hero p {
+                    font-size: 1.2em;
+                    margin-bottom: 5px;
+                }
+
+                @media (max-width: 768px) {
+                    .hero {
+                        padding: 30px 12px;
+                        margin-bottom: 25px;
+                        background-attachment: scroll;
+                    }
+
+                    .hero h2 {
+                        font-size: 1.3em;
+                        margin-bottom: 8px;
+                    }
+
+                    .hero p {
+                        font-size: 0.9em;
+                        margin-bottom: 3px;
+                    }
+                }
+
+                .container {
+                    display: flex;
+                    gap: 30px;
+                    max-width: 1400px;
+                    margin: 0 auto;
+                    padding: 0 20px;
+                    margin-bottom: 50px;
+                }
+
+                .products-section {
+                    flex: 1;
+                    min-width: 0;
+                }
+
+                /* Alternating Large Grid */
+                .alternating-grid {
+                    display: grid;
+                    gap: 40px;
+                }
+
+                .product-item {
+                    background: white;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    align-items: center;
+                }
+
+                .product-item:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+                }
+
+                .product-item:nth-child(even) {
+                    grid-template-columns: 1fr 1fr;
+                }
+
+                .product-item:nth-child(even) .product-image {
+                    order: 2;
+                }
+
+                .product-item:nth-child(even) .product-content {
+                    order: 1;
+                }
+
+                .product-image {
+                    background: linear-gradient(135deg, #FFB74D 0%, #FF9800 100%);
+                    min-height: 300px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 120px;
+                    color: rgba(255, 255, 255, 0.4);
+                    font-weight: bold;
+                    overflow: hidden;
+                }
+
+                .product-image img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    object-position: center;
+                }
+
+                .product-content {
+                    padding: 40px;
+                }
+
+                .product-content h3 {
+                    font-size: 1.8em;
+                    color: #FF6F00;
+                    margin-bottom: 10px;
+                }
+
+                .product-description {
+                    color: #666;
+                    margin-bottom: 20px;
+                    font-size: 1em;
+                    line-height: 1.8;
+                }
+
+                .benefit-tag {
+                    display: inline-block;
+                    background: #FFE0B2;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    margin-bottom: 20px;
+                    font-size: 0.9em;
+                    color: #FF6F00;
+                    font-weight: 500;
+                }
+
+                .product-content .price {
+                    font-size: 1.5em;
+                    color: #FF6F00;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                }
+
+                .quantity-selector {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-bottom: 20px;
+                }
+
+                .quantity-selector button {
+                    background: #FF9800;
+                    color: white;
+                    border: none;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    font-size: 1.1em;
+                    transition: background 0.3s ease;
+                }
+
+                .quantity-selector button:hover {
+                    background: #FF6F00;
+                }
+
+                .quantity-selector input {
+                    width: 60px;
+                    padding: 8px;
+                    border: 2px solid #FF9800;
+                    border-radius: 5px;
+                    text-align: center;
+                    font-size: 1em;
+                }
+
+                .add-to-cart-btn {
+                    background: linear-gradient(135deg, #FF9800 0%, #FF6F00 100%);
+                    color: white;
+                    padding: 12px 30px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 1em;
+                    cursor: pointer;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    width: 100%;
+                    font-weight: bold;
+                }
+
+                .add-to-cart-btn:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
+                }
+
+                /* Sidebar Keranjang - STICKY */
+                .cart-sidebar {
+                    width: 350px;
+                    position: sticky;
+                    top: 20px;
+                    height: fit-content;
+                    background: #FFFAF0;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 30px rgba(255, 152, 0, 0.15);
+                    padding: 30px;
+                    border-top: 4px solid #FF9800;
+                }
+
+                .cart-sidebar h2 {
+                    color: #FF6F00;
+                    margin-bottom: 20px;
+                    font-size: 1.5em;
+                    border-bottom: 3px solid #FF9800;
+                    padding-bottom: 10px;
+                }
+
+                .cart-items {
+                    max-height: 400px;
+                    overflow-y: auto;
+                    margin-bottom: 20px;
+                }
+
+                .cart-item {
+                    background: #FFE0B2;
+                    padding: 12px;
+                    margin-bottom: 10px;
+                    border-radius: 8px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-size: 0.9em;
+                    border-left: 4px solid #FF9800;
+                }
+
+                .cart-item-name {
+                    font-weight: bold;
+                    color: #333;
+                    flex: 1;
+                }
+
+                .cart-item-qty {
+                    color: #FF9800;
+                    font-weight: bold;
+                    margin: 0 8px;
+                }
+
+                .cart-item-price {
+                    color: #FF6F00;
+                    font-weight: bold;
+                }
+
+                .remove-item {
+                    background: #ff6b6b;
+                    color: white;
+                    border: none;
+                    width: 25px;
+                    height: 25px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    font-size: 0.8em;
+                    margin-left: 8px;
+                    transition: background 0.3s ease;
+                }
+
+                .remove-item:hover {
+                    background: #ff5252;
+                }
+
+                .cart-summary {
+                    border-top: 2px solid #e0e0e0;
+                    padding-top: 20px;
+                }
+
+                .summary-row {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                    font-size: 0.95em;
+                }
+
+                .summary-row.total {
+                    font-size: 1.2em;
+                    font-weight: bold;
+                    color: #FF6F00;
+                    margin-top: 15px;
+                    border-top: 3px solid #FF9800;
+                    padding-top: 10px;
+                }
+
+                .checkout-btn {
+                    width: 100%;
+                    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+                    color: white;
+                    padding: 15px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 1.1em;
+                    font-weight: bold;
+                    cursor: pointer;
+                    margin-top: 20px;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                }
+
+                .checkout-btn:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 8px 20px rgba(17, 153, 142, 0.5);
+                }
+
+                .checkout-btn svg {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .empty-cart-message {
+                    text-align: center;
+                    color: #999;
+                    padding: 20px;
+                    font-size: 0.9em;
+                }
+
+                /* Form Pesanan */
+                .order-form {
+                    margin-top: 25px;
+                    padding-top: 25px;
+                    border-top: 3px solid #FF9800;
+                }
+
+                .order-form h3 {
+                    color: #FF6F00;
+                    font-size: 1.2em;
+                    margin-bottom: 15px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .form-group {
+                    margin-bottom: 15px;
+                }
+
+                .form-group label {
+                    display: block;
+                    color: #FF6F00;
+                    font-weight: 600;
+                    margin-bottom: 6px;
+                    font-size: 0.9em;
+                }
+
+                .form-group input,
+                .form-group select {
+                    width: 100%;
+                    padding: 10px 12px;
+                    border: 2px solid #FFE0B2;
+                    border-radius: 8px;
+                    font-size: 0.95em;
+                    background: white;
+                    color: #333;
+                    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+                    font-family: inherit;
+                }
+
+                .form-group input:focus,
+                .form-group select:focus {
+                    outline: none;
+                    border-color: #FF9800;
+                    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+                }
+
+                .form-group select {
+                    appearance: none;
+                    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                    background-repeat: no-repeat;
+                    background-position: right 10px center;
+                    background-size: 20px;
+                    padding-right: 35px;
+                    color: #FF6F00;
+                }
+
+                .form-group input[type="date"] {
+                    color: #FF6F00;
+                    font-weight: 500;
+                }
+
+                .form-group input::placeholder {
+                    color: #999;
+                }
+
+                .sk-text {
+                    font-size: 0.8em;
+                    color: #FF9800;
+                    margin-top: 5px;
+                    font-style: italic;
+                }
+
+                .form-note {
+                    background: #FFF3E0;
+                    border-left: 4px solid #FF9800;
+                    padding: 10px 12px;
+                    border-radius: 6px;
+                    font-size: 0.85em;
+                    color: #FF6F00;
+                    margin-bottom: 15px;
+                }
+
+                .hidden-sales-input {
+                    display: none;
+                }
+
+                @media (max-width: 1024px) {
+                    .container {
+                        gap: 15px;
+                    }
+
+                    .cart-sidebar {
+                        width: 300px;
+                        padding: 20px;
+                    }
+
+                    .product-item {
+                        grid-template-columns: 1fr !important;
+                    }
+
+                    .product-item:nth-child(even) .product-image {
+                        order: 1;
+                    }
+
+                    .product-item:nth-child(even) .product-content {
+                        order: 2;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .container {
+                        gap: 12px;
+                        padding: 0 10px;
+                        margin-bottom: 25px;
+                        flex-direction: column;
+                    }
+
+                    .products-section {
+                        flex: 1;
+                    }
+
+                    .cart-sidebar {
+                        width: 100%;
+                        padding: 15px;
+                        top: auto;
+                        position: relative;
+                        max-height: 250px;
+                    }
+
+                    .cart-sidebar h2 {
+                        font-size: 1.1em;
+                        margin-bottom: 12px;
+                    }
+
+                    .cart-items {
+                        max-height: 300px;
+                        margin-bottom: 12px;
+                    }
+
+                    .cart-item {
+                        font-size: 0.8em;
+                        padding: 8px;
+                        margin-bottom: 8px;
+                    }
+
+                    .product-item {
+                        gap: 0;
+                    }
+
+                    .product-image {
+                        min-height: 200px;
+                    }
+
+                    .product-content {
+                        padding: 15px;
+                    }
+
+                    .product-content h3 {
+                        font-size: 1.3em;
+                        margin-bottom: 8px;
+                    }
+
+                    .product-description {
+                        font-size: 0.85em;
+                        margin-bottom: 12px;
+                        line-height: 1.5;
+                    }
+
+                    .benefit-tag {
+                        font-size: 0.8em;
+                        padding: 6px 12px;
+                        margin-bottom: 12px;
+                    }
+
+                    .price {
+                        font-size: 1.1em;
+                        margin-bottom: 12px;
+                    }
+
+                    .quantity-selector button {
+                        width: 35px;
+                        height: 35px;
+                        font-size: 0.9em;
+                    }
+
+                    .quantity-selector input {
+                        width: 50px;
+                        font-size: 0.9em;
+                    }
+
+                    .add-to-cart-btn {
+                        font-size: 0.9em;
+                        padding: 10px 15px;
+                    }
+
+                    .order-form {
+                        margin-top: 15px;
+                        padding-top: 15px;
+                    }
+
+                    .order-form h3 {
+                        font-size: 0.95em;
+                        margin-bottom: 12px;
+                    }
+
+                    .form-group {
+                        margin-bottom: 10px;
+                    }
+
+                    .form-group label {
+                        font-size: 0.8em;
+                        margin-bottom: 4px;
+                    }
+
+                    .form-group input,
+                    .form-group select {
+                        font-size: 0.85em;
+                        padding: 8px 10px;
+                    }
+
+                    .summary-row {
+                        font-size: 0.85em;
+                        margin-bottom: 8px;
+                    }
+
+                    .summary-row.total {
+                        font-size: 1em;
+                    }
+
+                    .checkout-btn {
+                        font-size: 0.95em;
+                        padding: 12px;
+                        margin-top: 12px;
+                    }
+
+                    .checkout-btn svg {
+                        width: 18px;
+                        height: 18px;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .container {
+                        gap: 10px;
+                        padding: 0 8px;
+                    }
+
+                    .cart-sidebar {
+                        width: 240px;
+                        padding: 12px;
+                    }
+                }
+
+                /* Admin Panel Styling */
+                .admin-panel-overlay {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    z-index: 9999;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .admin-panel-overlay.active {
+                    display: flex;
+                }
+
+                .admin-panel-modal {
+                    background: white;
+                    border-radius: 15px;
+                    padding: 30px;
+                    max-width: 500px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                }
+
+                .admin-panel-modal h2 {
+                    color: #FF6F00;
+                    margin-bottom: 20px;
+                    font-size: 1.8em;
+                    border-bottom: 3px solid #FF9800;
+                    padding-bottom: 10px;
+                }
+
+                .admin-form-group {
+                    margin-bottom: 15px;
+                }
+
+                .admin-form-group label {
+                    display: block;
+                    color: #FF6F00;
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    font-size: 0.95em;
+                }
+
+                .admin-form-group input,
+                .admin-form-group select {
+                    width: 100%;
+                    padding: 10px 12px;
+                    border: 2px solid #FFE0B2;
+                    border-radius: 8px;
+                    font-size: 0.95em;
+                    background: white;
+                    color: #333;
+                    transition: border-color 0.3s ease;
+                    font-family: inherit;
+                }
+
+                .admin-form-group input:focus,
+                .admin-form-group select:focus {
+                    outline: none;
+                    border-color: #FF9800;
+                    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+                }
+
+                .admin-buttons {
+                    display: flex;
+                    gap: 10px;
+                    margin-top: 20px;
+                }
+
+                .admin-btn {
+                    flex: 1;
+                    padding: 12px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 0.95em;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .admin-btn-save {
+                    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+                    color: white;
+                }
+
+                .admin-btn-save:hover {
+                    transform: scale(1.02);
+                    box-shadow: 0 8px 20px rgba(17, 153, 142, 0.3);
+                }
+
+                .admin-btn-close {
+                    background: #e0e0e0;
+                    color: #333;
+                }
+
+                .admin-btn-close:hover {
+                    background: #d0d0d0;
+                }
+
+                .stock-badge {
+                    display: inline-block;
+                    background: #11998e;
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 20px;
+                    font-size: 0.85em;
+                    font-weight: bold;
+                    margin-top: 5px;
+                }
+
+                .stock-badge.out {
+                    background: #ff6b6b;
+                }
+
+                /* Pre Order Info Box */
+                .preorder-info-box {
+                    background: white;
+                    border: 3px solid #FF9800;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin: 20px auto;
+                    max-width: 600px;
+                    text-align: center;
+                    box-shadow: 0 5px 15px rgba(255, 152, 0, 0.1);
+                }
+
+                .preorder-info-box h3 {
+                    color: #FF6F00;
+                    margin-bottom: 15px;
+                    font-size: 1.3em;
+                }
+
+                .preorder-info-row {
+                    display: flex;
+                    justify-content: space-around;
+                    flex-wrap: wrap;
+                    gap: 15px;
+                    margin-bottom: 10px;
+                }
+
+                .preorder-info-item {
+                    flex: 1;
+                    min-width: 150px;
+                }
+
+                .preorder-info-item label {
+                    display: block;
+                    color: #FF9800;
+                    font-weight: bold;
+                    font-size: 0.9em;
+                    margin-bottom: 5px;
+                }
+
+                .preorder-info-item value {
+                    display: block;
+                    color: #333;
+                    font-size: 1.1em;
+                    font-weight: bold;
+                }
+
+                .admin-access-hint {
+                    font-size: 0.8em;
+                    color: #ccc;
+                    cursor: pointer;
+                    user-select: none;
+                    margin-top: 15px;
+                }
+
+                @media (max-width: 768px) {
+                    .preorder-info-box {
+                        margin: 15px 10px;
+                        padding: 15px;
+                    }
+
+                    .preorder-info-item {
+                        min-width: 120px;
+                    }
+
+                    .admin-panel-modal {
+                        padding: 20px;
+                    }
+                }
+            </style>
+            <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+        </head>
+
+        <body>
+            <!-- Admin Panel Overlay -->
+            <div class="admin-panel-overlay" id="adminPanelOverlay">
+                <div class="admin-panel-modal">
+                    <h2 id="adminPanelTitle">Admin Panel</h2>
+
+                    <!-- Tab untuk switch antara Stok dan Pre Order -->
+                    <div
+                        style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #FFE0B2; padding-bottom: 10px;">
+                        <button onclick="switchAdminTab('stock')" id="tabStockBtn"
+                            style="flex: 1; padding: 10px; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📦
+                            Stok</button>
+                        <button onclick="switchAdminTab('preorder')" id="tabPreorderBtn"
+                            style="flex: 1; padding: 10px; background: #FFE0B2; color: #FF6F00; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">📅
+                            Pre Order</button>
+                    </div>
+
+                    <!-- Stok Panel -->
+                    <div id="stockPanel">
+                        <div class="admin-form-group">
+                            <label>Si' Ori (Rp 5.000)</label>
+                            <input type="number" id="stockOri" min="0" value="0">
+                            <div style="font-size: 0.85em; color: #666; margin-top: 3px;">Stok saat ini</div>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Si' Nori (Rp 5.000)</label>
+                            <input type="number" id="stockNori" min="0" value="0">
+                            <div style="font-size: 0.85em; color: #666; margin-top: 3px;">Stok saat ini</div>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Si' Spicy (Rp 5.500)</label>
+                            <input type="number" id="stockSpicy" min="0" value="0">
+                            <div style="font-size: 0.85em; color: #666; margin-top: 3px;">Stok saat ini</div>
+                        </div>
+                    </div>
+
+                    <!-- Pre Order Panel -->
+                    <div id="preorderPanel" style="display: none;">
+                        <div class="admin-form-group">
+                            <label>Tanggal Pre Order Dimulai</label>
+                            <input type="date" id="preorderStartDate">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Tanggal Pre Order Berakhir</label>
+                            <input type="date" id="preorderEndDate">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Tanggal Produk Ready</label>
+                            <input type="date" id="productReadyDate">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Jam Ambil (format: HH:MM)</label>
+                            <input type="time" id="pickupTime">
+                        </div>
+                    </div>
+
+                    <div class="admin-buttons">
+                        <button class="admin-btn admin-btn-save" onclick="saveAdminChanges()">💾 Simpan</button>
+                        <button class="admin-btn admin-btn-close" onclick="closeAdminPanel()">Tutup</button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Stok Panel -->
-            <div id="stockPanel">
-                <div class="admin-form-group">
-                    <label>Si' Ori (Rp 5.000)</label>
-                    <input type="number" id="stockOri" min="0" value="0">
-                    <div style="font-size: 0.85em; color: #666; margin-top: 3px;">Stok saat ini</div>
-                </div>
-                <div class="admin-form-group">
-                    <label>Si' Nori (Rp 5.000)</label>
-                    <input type="number" id="stockNori" min="0" value="0">
-                    <div style="font-size: 0.85em; color: #666; margin-top: 3px;">Stok saat ini</div>
-                </div>
-                <div class="admin-form-group">
-                    <label>Si' Spicy (Rp 5.500)</label>
-                    <input type="number" id="stockSpicy" min="0" value="0">
-                    <div style="font-size: 0.85em; color: #666; margin-top: 3px;">Stok saat ini</div>
+            <!-- Header -->
+            <header>
+                <h1><img src="assets/images/sidopa.png" alt="Si Dopa"></h1>
+                <p>🌕🌕Camilan crunchy berbentuk bola-bola yang diolah dari bahan baku singkong dan campuran tepung kanji dengan
+                    bumbu tabur yang bantu naikkan mood🌕🌕
+                <p>
+                <p>👇</p>
+                </p>Camilan Enak, Murah, Banyak untuk temani Belajar atau Bekerja👩‍💻</p>
+            </header>
+
+            <!-- Hero Section -->
+            <div class="hero">
+                <h2>✨Bukan hanya sekedar camilan, tapi teman produktif yang menyenangkan✨</h2>
+                <p>✅Si Dopa akan memberikan pengalaman lawan jenuh dan stressnya bekerja atau belajar melalui teksturnya yang
+                    renyah </p>
+                <p>✅Sensasi varian rasa yang buat kamu kembali fokus dan enjoy dengan aktivitasmu</p>
+                
+                <!-- Total Stock Display -->
+                <div style="margin-top: 30px; padding: 15px 20px; background: rgba(255,255,255,0.2); border-left: 4px solid #11998e; border-radius: 8px; display: inline-block;">
+                    <p style="font-size: 0.9em; color: #333; margin-bottom: 5px;">📊 Total Stok Tersedia:</p>
+                    <p style="font-size: 2em; font-weight: bold; color: #11998e; margin: 0;">
+                        <span id="totalStockDisplay">-</span> unit
+                    </p>
                 </div>
             </div>
 
-            <!-- Pre Order Panel -->
-            <div id="preorderPanel" style="display: none;">
-                <div class="admin-form-group">
-                    <label>Tanggal Pre Order Dimulai</label>
-                    <input type="date" id="preorderStartDate">
+
+            <!-- Main Container -->
+            <div class="container">
+                <!-- Products Section -->
+                <div class="products-section">
+                    <div class="alternating-grid">
+                        <!-- Product 1 -->
+                        <div class="product-item">
+                            <div class="product-image">
+                                <img src="assets/images/etalase_ori.jpg" alt="Si' Ori">
+                            </div>
+                            <div class="product-content">
+                                <h3>Si' Ori</h3>
+                                <div class="benefit-tag">✓ Menghilangkan Bosan dengan Renyahnya Tekstur Original🤩</div>
+                                <div class="stock-badge" id="stockBadgeOri">Stok: 0</div>
+                                <p class="product-description">
+                                </p>
+                                <div class="price">Rp 5.000</div>
+                                <div class="quantity-selector">
+                                    <button onclick="decrementQty(this)">−</button>
+                                    <input type="number" value="1" min="1" class="qty-input">
+                                    <button onclick="incrementQty(this)">+</button>
+                                </div>
+                                <button class="add-to-cart-btn" id="addBtnOri"
+                                    onclick="addToCart('Si\' Ori', 5000, this)">Tambah ke Keranjang</button>
+                            </div>
+                        </div>
+
+                        <!-- Product 2 -->
+                        <div class="product-item">
+                            <div class="product-image">
+                                <img src="assets/images/etalase_nori.jpg" alt="Si' Nori">
+                            </div>
+                            <div class="product-content">
+                                <h3>Si' Nori</h3>
+                                <div class="benefit-tag">✓ Mengatasi Bosan dari Rasa Rumput Laut yang gurih🧐</div>
+                                <div class="stock-badge" id="stockBadgeNori">Stok: 0</div>
+                                <p class="product-description">
+                                </p>
+                                <div class="price">Rp 5.000</div>
+                                <div class="quantity-selector">
+                                    <button onclick="decrementQty(this)">−</button>
+                                    <input type="number" value="1" min="1" class="qty-input">
+                                    <button onclick="incrementQty(this)">+</button>
+                                </div>
+                                <button class="add-to-cart-btn" id="addBtnNori"
+                                    onclick="addToCart('Si\' Nori', 5000, this)">Tambah ke Keranjang</button>
+                            </div>
+                        </div>
+
+                        <!-- Product 3 -->
+                        <div class="product-item">
+                            <div class="product-image">
+                                <img src="assets/images/etalase_spicy.jpg" alt="Si'Spicy">
+                            </div>
+                            <div class="product-content">
+                                <h3>Si'Spicy</h3>
+                                <div class="benefit-tag">✓ Mengurangi Stress dengan Rasa Pedas🔥, buatmu kamu kembali refresh
+                                    ditengah tekanan🙂‍↔️</div>
+                                <div class="stock-badge" id="stockBadgeSpicy">Stok: 0</div>
+                                <p class="product-description">
+                                </p>
+                                <div class="price">Rp 5.500</div>
+                                <div class="quantity-selector">
+                                    <button onclick="decrementQty(this)">−</button>
+                                    <input type="number" value="1" min="1" class="qty-input">
+                                    <button onclick="incrementQty(this)">+</button>
+                                </div>
+                                <button class="add-to-cart-btn" id="addBtnSpicy"
+                                    onclick="addToCart('Si\' Spicy', 5500, this)">Tambah ke Keranjang</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="admin-form-group">
-                    <label>Tanggal Pre Order Berakhir</label>
-                    <input type="date" id="preorderEndDate">
-                </div>
-                <div class="admin-form-group">
-                    <label>Tanggal Produk Ready</label>
-                    <input type="date" id="productReadyDate">
-                </div>
-                <div class="admin-form-group">
-                    <label>Jam Ambil (format: HH:MM)</label>
-                    <input type="time" id="pickupTime">
+
+                <!-- Cart Sidebar (Sticky) -->
+                <aside class="cart-sidebar">
+                    <h2>🛒 Keranjang</h2>
+
+                    <div class="cart-items" id="cartItems">
+                        <div class="empty-cart-message">Keranjang Anda masih kosong</div>
+                    </div>
+
+                    <div class="cart-summary">
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <span id="total">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Form Pengisian Data -->
+                    <div class="order-form">
+                        <h3>📝 Detail Pemesan</h3>
+
+                        <!-- Input Hidden untuk Sales Tracking -->
+                        <input type="hidden" id="salesCode" value="">
+
+                        <div class="form-group">
+                            <label for="buyerName">Nama Pembeli</label>
+                            <input type="text" id="buyerName" placeholder="Masukkan nama Anda" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pickupLocation">Tempat Ambil</label>
+                            <select id="pickupLocation" required>
+                                <option value="">-- Pilih Tempat Ambil --</option>
+                                <option value="Taman STID">📍 Taman STID</option>
+                                <option value="Diantar Kerumahmu (dengan S&K)">🚗 Diantar Kerumahmu (dengan S&K)</option>
+                                <option value="Custom">🎯 Custom</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pickupDate">Tanggal Pengambilan</label>
+                            <input type="date" id="pickupDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="paymentMethod">Metode Pembayaran</label>
+                            <select id="paymentMethod" required>
+                                <option value="">-- Pilih Metode Pembayaran --</option>
+                                <option value="Qris/TF">💳 Qris/Transfer Bank</option>
+                                <option value="Cash">💵 Cash (Uang Tunai)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="checkout-btn" onclick="openWhatsApp()" id="checkoutBtn" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 0C5.37 0 0 5.37 0 12c0 2.1.56 4.09 1.52 5.8L0 24l6.39-1.48C8.9 23.44 10.9 24 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0zm0 22c-1.87 0-3.67-.5-5.23-1.35l-.37-.2-3.88.9.92-3.71-.24-.37C2.5 15.67 2 13.88 2 12c0-5.51 4.49-10 10-10s10 4.49 10 10-4.49 10-10 10z" />
+                            <path
+                                d="M16.67 14.59c-.28-.14-1.65-.82-1.91-.92-.25-.09-.44-.14-.62.14-.19.28-.72.92-.88 1.11-.16.19-.33.21-.61.07-.28-.14-1.19-.44-2.27-1.4-.84-.75-1.41-1.68-1.57-1.97-.16-.28-.02-.44.12-.58.12-.12.28-.33.41-.49.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.62-1.5-.85-2.05-.23-.54-.46-.46-.62-.47-.16 0-.35-.02-.53-.02-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.39 0 1.41 1.03 2.77 1.17 2.96.14.19 1.98 3.02 4.82 4.24 2.85 1.22 2.85.81 3.37.76.52-.05 1.65-.67 1.88-1.33.23-.66.23-1.23.16-1.35-.07-.12-.26-.19-.55-.33z" />
+                        </svg>
+                        WhatsApp
+                    </button>
+                </aside>
+
+                <div id="tableBody" class=" flex justify-center" style="visibility: hidden;">
+                    <p class="text-center py-4 text-gray-500">Loading...</p>
                 </div>
             </div>
 
-            <div class="admin-buttons">
-                <button class="admin-btn admin-btn-save" onclick="saveAdminChanges()">💾 Simpan</button>
-                <button class="admin-btn admin-btn-close" onclick="closeAdminPanel()">Tutup</button>
-            </div>
-        </div>
-    </div>
+            <script>
+        // ─── KONFIGURASI ──────────────────────────────────────
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzmTcSoZd99MUYCbuBrIb3phf4XCHVHeYerKZIpdMiFw_rlBAylIA-4NZ5ZmcNBac/exec";
+        // PASTIKAN KEY INI SAMA DENGAN YANG ADA DI APPS SCRIPT
+        const API_KEY = "KUNCI_RAHASIA_123"; 
 
-    <!-- Header -->
-    <header>
-        <h1><img src="assets/images/sidopa.png" alt="Si Dopa"></h1>
-        <p>🌕🌕Camilan crunchy berbentuk bola-bola yang diolah dari bahan baku singkong dan campuran tepung kanji dengan
-            bumbu tabur yang bantu naikkan mood🌕🌕
-        <p>
-        <p>👇</p>
-        </p>Camilan Enak, Murah, Banyak untuk temani Belajar atau Bekerja👩‍💻</p>
-    </header>
 
-    <!-- Hero Section -->
-    <div class="hero">
-        <h2>✨Bukan hanya sekedar camilan, tapi teman produktif yang menyenangkan✨</h2>
-        <p>✅Si Dopa akan memberikan pengalaman lawan jenuh dan stressnya bekerja atau belajar melalui teksturnya yang
-            renyah </p>
-        <p>✅Sensasi varian rasa yang buat kamu kembali fokus dan enjoy dengan aktivitasmu</p>
+        // ─── AMBIL STOK SAAT HALAMAN DIBUKA ────────────────────
+        async function loadStock() {
+        try {
+            const res  = await fetch(`${APPS_SCRIPT_URL}?action=getStock&key=${API_KEY}`);
+            const data = await res.json();
+            if (data.status === "ok") {
+            updateStockDisplay(data.stok);
+            }
+        } catch (err) {
+            console.error("Gagal ambil stok:", err);
+        }
+        }
+
+        function updateStockDisplay(stok) {
+        document.getElementById("stockBadgeOri").textContent   = `Stok: ${stok.ori}`;
+        document.getElementById("stockBadgeNori").textContent  = `Stok: ${stok.nori}`;
+        document.getElementById("stockBadgeSpicy").textContent = `Stok: ${stok.spicy}`;
+
+        const total = stok.ori + stok.nori + stok.spicy;
+        document.getElementById("totalStockDisplay").textContent = total;
+
+        // Nonaktifkan tombol jika stok habis
+        toggleBtn("addBtnOri",   stok.ori);
+        toggleBtn("addBtnNori",  stok.nori);
+        toggleBtn("addBtnSpicy", stok.spicy);
+        }
+
+        function toggleBtn(id, stok) {
+        const btn = document.getElementById(id);
+        btn.disabled = stok <= 0;
+        btn.textContent = stok > 0 ? "Tambah ke Keranjang" : "Stok Habis";
+        }
+
+        // ─── KIRIM PESANAN KE SPREADSHEET ──────────────────────
+        async function submitOrderToSheet(orderData) {
+        try {
+            // Susun semua data jadi parameter URL
+            const params = new URLSearchParams({
+            action: "submitOrder",
+            key: API_KEY,
+            nama: orderData.nama,
+            lokasi: orderData.lokasi,
+            tanggal: orderData.tanggal,
+            metode: orderData.metode,
+            qtyOri: orderData.qtyOri,
+            qtyNori: orderData.qtyNori,
+            qtySpicy: orderData.qtySpicy,
+            total: orderData.total,
+            salesCode: orderData.salesCode
+            });
+
+            const res = await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`);
+            const data = await res.json();
+            return data;
+        } catch (err) {
+            console.error("Gagal kirim pesanan:", err);
+            return { status: "error", message: "Koneksi gagal" };
+        }
+        }
+
+        // ─── FUNGSI KERANJANG ───────────────────────────────────
+        let cart = [];
+
+        function addToCart(name, price, btn) {
+        const qtyInput = btn.closest('.product-content').querySelector('.qty-input');
+        const qty = parseInt(qtyInput.value) || 1;
         
-        <!-- Total Stock Display -->
-        <div style="margin-top: 30px; padding: 15px 20px; background: rgba(255,255,255,0.2); border-left: 4px solid #11998e; border-radius: 8px; display: inline-block;">
-            <p style="font-size: 0.9em; color: #333; margin-bottom: 5px;">📊 Total Stok Tersedia:</p>
-            <p style="font-size: 2em; font-weight: bold; color: #11998e; margin: 0;">
-                <span id="totalStockDisplay">-</span> unit
-            </p>
-        </div>
-    </div>
+        const existing = cart.find(i => i.name === name);
+        if (existing) {
+            existing.qty += qty;
+            existing.subtotal = existing.qty * existing.price;
+        } else {
+            cart.push({ name, price, qty, subtotal: price * qty });
+        }
+        renderCart();
+        }
 
+        function removeFromCart(index) {
+        cart.splice(index, 1);
+        renderCart();
+        }
 
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Products Section -->
-        <div class="products-section">
-            <div class="alternating-grid">
-                <!-- Product 1 -->
-                <div class="product-item">
-                    <div class="product-image">
-                        <img src="assets/images/etalase_ori.jpg" alt="Si' Ori">
-                    </div>
-                    <div class="product-content">
-                        <h3>Si' Ori</h3>
-                        <div class="benefit-tag">✓ Menghilangkan Bosan dengan Renyahnya Tekstur Original🤩</div>
-                        <div class="stock-badge" id="stockBadgeOri">Stok: 0</div>
-                        <p class="product-description">
-                        </p>
-                        <div class="price">Rp 5.000</div>
-                        <div class="quantity-selector">
-                            <button onclick="decrementQty(this)">−</button>
-                            <input type="number" value="1" min="1" class="qty-input">
-                            <button onclick="incrementQty(this)">+</button>
-                        </div>
-                        <button class="add-to-cart-btn" id="addBtnOri"
-                            onclick="addToCart('Si\' Ori', 5000, this)">Tambah ke Keranjang</button>
-                    </div>
-                </div>
+        function renderCart() {
+        const cartItems = document.getElementById("cartItems");
+        const totalEl   = document.getElementById("total");
+        const checkoutBtn = document.getElementById("checkoutBtn");
 
-                <!-- Product 2 -->
-                <div class="product-item">
-                    <div class="product-image">
-                        <img src="assets/images/etalase_nori.jpg" alt="Si' Nori">
-                    </div>
-                    <div class="product-content">
-                        <h3>Si' Nori</h3>
-                        <div class="benefit-tag">✓ Mengatasi Bosan dari Rasa Rumput Laut yang gurih🧐</div>
-                        <div class="stock-badge" id="stockBadgeNori">Stok: 0</div>
-                        <p class="product-description">
-                        </p>
-                        <div class="price">Rp 5.000</div>
-                        <div class="quantity-selector">
-                            <button onclick="decrementQty(this)">−</button>
-                            <input type="number" value="1" min="1" class="qty-input">
-                            <button onclick="incrementQty(this)">+</button>
-                        </div>
-                        <button class="add-to-cart-btn" id="addBtnNori"
-                            onclick="addToCart('Si\' Nori', 5000, this)">Tambah ke Keranjang</button>
-                    </div>
-                </div>
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<div class="empty-cart-message">Keranjang Anda masih kosong</div>';
+            totalEl.textContent = "Rp 0";
+            checkoutBtn.style.display = "none";
+            return;
+        }
 
-                <!-- Product 3 -->
-                <div class="product-item">
-                    <div class="product-image">
-                        <img src="assets/images/etalase_spicy.jpg" alt="Si'Spicy">
-                    </div>
-                    <div class="product-content">
-                        <h3>Si'Spicy</h3>
-                        <div class="benefit-tag">✓ Mengurangi Stress dengan Rasa Pedas🔥, buatmu kamu kembali refresh
-                            ditengah tekanan🙂‍↔️</div>
-                        <div class="stock-badge" id="stockBadgeSpicy">Stok: 0</div>
-                        <p class="product-description">
-                        </p>
-                        <div class="price">Rp 5.500</div>
-                        <div class="quantity-selector">
-                            <button onclick="decrementQty(this)">−</button>
-                            <input type="number" value="1" min="1" class="qty-input">
-                            <button onclick="incrementQty(this)">+</button>
-                        </div>
-                        <button class="add-to-cart-btn" id="addBtnSpicy"
-                            onclick="addToCart('Si\' Spicy', 5500, this)">Tambah ke Keranjang</button>
-                    </div>
-                </div>
+        cartItems.innerHTML = cart.map((item, i) => `
+            <div class="cart-item">
+            <span class="cart-item-name">${item.name}</span>
+            <span class="cart-item-qty">x${item.qty}</span>
+            <span class="cart-item-price">Rp ${item.subtotal.toLocaleString('id-ID')}</span>
+            <button class="remove-item" onclick="removeFromCart(${i})">✕</button>
             </div>
-        </div>
+        `).join('');
 
-        <!-- Cart Sidebar (Sticky) -->
-        <aside class="cart-sidebar">
-            <h2>🛒 Keranjang</h2>
+        const total = cart.reduce((sum, i) => sum + i.subtotal, 0);
+        totalEl.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+        checkoutBtn.style.display = "flex";
+        }
 
-            <div class="cart-items" id="cartItems">
-                <div class="empty-cart-message">Keranjang Anda masih kosong</div>
-            </div>
+        function incrementQty(btn) {
+        const input = btn.previousElementSibling;
+        input.value = parseInt(input.value) + 1;
+        }
 
-            <div class="cart-summary">
-                <div class="summary-row total">
-                    <span>Total:</span>
-                    <span id="total">Rp 0</span>
-                </div>
-            </div>
+        function decrementQty(btn) {
+        const input = btn.nextElementSibling;
+        if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+        }
 
-            <!-- Form Pengisian Data -->
-            <div class="order-form">
-                <h3>📝 Detail Pemesan</h3>
+        // ─── BUKA WHATSAPP + SIMPAN KE SPREADSHEET ─────────────
+        async function openWhatsApp() {
+        const nama   = document.getElementById("buyerName").value.trim();
+        const lokasi = document.getElementById("pickupLocation").value;
+        const tanggal= document.getElementById("pickupDate").value;
+        const metode = document.getElementById("paymentMethod").value;
 
-                <!-- Input Hidden untuk Sales Tracking -->
-                <input type="hidden" id="salesCode" value="">
+        if (!nama || !lokasi || !tanggal || !metode) {
+            alert("Mohon lengkapi semua data pemesan dulu!");
+            return;
+        }
+        if (cart.length === 0) {
+            alert("Keranjang masih kosong!");
+            return;
+        }
 
-                <div class="form-group">
-                    <label for="buyerName">Nama Pembeli</label>
-                    <input type="text" id="buyerName" placeholder="Masukkan nama Anda" required>
-                </div>
+        const total  = cart.reduce((sum, i) => sum + i.subtotal, 0);
+        const qtyOri   = cart.find(i => i.name === "Si' Ori")?.qty   || 0;
+        const qtyNori  = cart.find(i => i.name === "Si' Nori")?.qty  || 0;
+        const qtySpicy = cart.find(i => i.name === "Si' Spicy")?.qty || 0;
 
-                <div class="form-group">
-                    <label for="pickupLocation">Tempat Ambil</label>
-                    <select id="pickupLocation" required>
-                        <option value="">-- Pilih Tempat Ambil --</option>
-                        <option value="Taman STID">📍 Taman STID</option>
-                        <option value="Diantar Kerumahmu (dengan S&K)">🚗 Diantar Kerumahmu (dengan S&K)</option>
-                        <option value="Custom">🎯 Custom</option>
-                    </select>
-                </div>
+        // Simpan ke spreadsheet
+        const result = await submitOrderToSheet({
+            nama, lokasi, tanggal, metode,
+            qtyOri, qtyNori, qtySpicy, total,
+            salesCode: document.getElementById("salesCode")?.value || "Direct"
+        });
 
-                <div class="form-group">
-                    <label for="pickupDate">Tanggal Pengambilan</label>
-                    <input type="date" id="pickupDate" required>
-                </div>
+        if (result.status === "error") {
+            alert("Gagal: " + result.message);
+            return;
+        }
 
-                <div class="form-group">
-                    <label for="paymentMethod">Metode Pembayaran</label>
-                    <select id="paymentMethod" required>
-                        <option value="">-- Pilih Metode Pembayaran --</option>
-                        <option value="Qris/TF">💳 Qris/Transfer Bank</option>
-                        <option value="Cash">💵 Cash (Uang Tunai)</option>
-                    </select>
-                </div>
-            </div>
+        // Buka WhatsApp
+        const pesanWA = `Halo Si Dopa! Saya mau pesan:\n\n` +
+            cart.map(i => `• ${i.name} x${i.qty} = Rp ${i.subtotal.toLocaleString('id-ID')}`).join('\n') +
+            `\n\nTotal: Rp ${total.toLocaleString('id-ID')}` +
+            `\nNama: ${nama}` +
+            `\nAmbil: ${lokasi}` +
+            `\nTanggal: ${tanggal}` +
+            `\nPembayaran: ${metode}`;
 
-            <button class="checkout-btn" onclick="openWhatsApp()" id="checkoutBtn" style="display: none;">
-                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M12 0C5.37 0 0 5.37 0 12c0 2.1.56 4.09 1.52 5.8L0 24l6.39-1.48C8.9 23.44 10.9 24 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0zm0 22c-1.87 0-3.67-.5-5.23-1.35l-.37-.2-3.88.9.92-3.71-.24-.37C2.5 15.67 2 13.88 2 12c0-5.51 4.49-10 10-10s10 4.49 10 10-4.49 10-10 10z" />
-                    <path
-                        d="M16.67 14.59c-.28-.14-1.65-.82-1.91-.92-.25-.09-.44-.14-.62.14-.19.28-.72.92-.88 1.11-.16.19-.33.21-.61.07-.28-.14-1.19-.44-2.27-1.4-.84-.75-1.41-1.68-1.57-1.97-.16-.28-.02-.44.12-.58.12-.12.28-.33.41-.49.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.62-1.5-.85-2.05-.23-.54-.46-.46-.62-.47-.16 0-.35-.02-.53-.02-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.39 0 1.41 1.03 2.77 1.17 2.96.14.19 1.98 3.02 4.82 4.24 2.85 1.22 2.85.81 3.37.76.52-.05 1.65-.67 1.88-1.33.23-.66.23-1.23.16-1.35-.07-.12-.26-.19-.55-.33z" />
-                </svg>
-                WhatsApp
-            </button>
-        </aside>
+        window.open(`https://wa.me/6283170951060?text=${encodeURIComponent(pesanWA)}`, '_blank');
+        
+        // Refresh stok setelah order
+        loadStock();
+        }
 
-        <div id="tableBody" class=" flex justify-center" style="visibility: hidden;">
-            <p class="text-center py-4 text-gray-500">Loading...</p>
-        </div>
-    </div>
+        // ─── JALANKAN SAAT HALAMAN DIBUKA ──────────────────────
+        window.addEventListener("DOMContentLoaded", loadStock);
+            </script>
+        </body>
 
-    <script>
-  // ─── KONFIGURASI ──────────────────────────────────────
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxVXoeUfCimisVM6zo6xf8qTqLx7Eg54D0iElX_7-3mBBD124KZdjpdcMegqmIyE60/exec";
-// PASTIKAN KEY INI SAMA DENGAN YANG ADA DI APPS SCRIPT
-const API_KEY = "KUNCI_RAHASIA_123"; 
-
-
-// ─── AMBIL STOK SAAT HALAMAN DIBUKA ────────────────────
-async function loadStock() {
-  try {
-    const res  = await fetch(`${APPS_SCRIPT_URL}?action=getStock&key=${API_KEY}`);
-    const data = await res.json();
-    if (data.status === "ok") {
-      updateStockDisplay(data.stok);
-    }
-  } catch (err) {
-    console.error("Gagal ambil stok:", err);
-  }
-}
-
-function updateStockDisplay(stok) {
-  document.getElementById("stockBadgeOri").textContent   = `Stok: ${stok.ori}`;
-  document.getElementById("stockBadgeNori").textContent  = `Stok: ${stok.nori}`;
-  document.getElementById("stockBadgeSpicy").textContent = `Stok: ${stok.spicy}`;
-
-  const total = stok.ori + stok.nori + stok.spicy;
-  document.getElementById("totalStockDisplay").textContent = total;
-
-  // Nonaktifkan tombol jika stok habis
-  toggleBtn("addBtnOri",   stok.ori);
-  toggleBtn("addBtnNori",  stok.nori);
-  toggleBtn("addBtnSpicy", stok.spicy);
-}
-
-function toggleBtn(id, stok) {
-  const btn = document.getElementById(id);
-  btn.disabled = stok <= 0;
-  btn.textContent = stok > 0 ? "Tambah ke Keranjang" : "Stok Habis";
-}
-
-// ─── KIRIM PESANAN KE SPREADSHEET ──────────────────────
-async function submitOrderToSheet(orderData) {
-  try {
-    // Susun semua data jadi parameter URL
-    const params = new URLSearchParams({
-      action: "submitOrder",
-      key: API_KEY,
-      nama: orderData.nama,
-      lokasi: orderData.lokasi,
-      tanggal: orderData.tanggal,
-      metode: orderData.metode,
-      qtyOri: orderData.qtyOri,
-      qtyNori: orderData.qtyNori,
-      qtySpicy: orderData.qtySpicy,
-      total: orderData.total,
-      salesCode: orderData.salesCode
-    });
-
-    const res = await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`);
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    console.error("Gagal kirim pesanan:", err);
-    return { status: "error", message: "Koneksi gagal" };
-  }
-}
-
-// ─── FUNGSI KERANJANG ───────────────────────────────────
-let cart = [];
-
-function addToCart(name, price, btn) {
-  const qtyInput = btn.closest('.product-content').querySelector('.qty-input');
-  const qty = parseInt(qtyInput.value) || 1;
-  
-  const existing = cart.find(i => i.name === name);
-  if (existing) {
-    existing.qty += qty;
-    existing.subtotal = existing.qty * existing.price;
-  } else {
-    cart.push({ name, price, qty, subtotal: price * qty });
-  }
-  renderCart();
-}
-
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  renderCart();
-}
-
-function renderCart() {
-  const cartItems = document.getElementById("cartItems");
-  const totalEl   = document.getElementById("total");
-  const checkoutBtn = document.getElementById("checkoutBtn");
-
-  if (cart.length === 0) {
-    cartItems.innerHTML = '<div class="empty-cart-message">Keranjang Anda masih kosong</div>';
-    totalEl.textContent = "Rp 0";
-    checkoutBtn.style.display = "none";
-    return;
-  }
-
-  cartItems.innerHTML = cart.map((item, i) => `
-    <div class="cart-item">
-      <span class="cart-item-name">${item.name}</span>
-      <span class="cart-item-qty">x${item.qty}</span>
-      <span class="cart-item-price">Rp ${item.subtotal.toLocaleString('id-ID')}</span>
-      <button class="remove-item" onclick="removeFromCart(${i})">✕</button>
-    </div>
-  `).join('');
-
-  const total = cart.reduce((sum, i) => sum + i.subtotal, 0);
-  totalEl.textContent = `Rp ${total.toLocaleString('id-ID')}`;
-  checkoutBtn.style.display = "flex";
-}
-
-function incrementQty(btn) {
-  const input = btn.previousElementSibling;
-  input.value = parseInt(input.value) + 1;
-}
-
-function decrementQty(btn) {
-  const input = btn.nextElementSibling;
-  if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
-}
-
-// ─── BUKA WHATSAPP + SIMPAN KE SPREADSHEET ─────────────
-async function openWhatsApp() {
-  const nama   = document.getElementById("buyerName").value.trim();
-  const lokasi = document.getElementById("pickupLocation").value;
-  const tanggal= document.getElementById("pickupDate").value;
-  const metode = document.getElementById("paymentMethod").value;
-
-  if (!nama || !lokasi || !tanggal || !metode) {
-    alert("Mohon lengkapi semua data pemesan dulu!");
-    return;
-  }
-  if (cart.length === 0) {
-    alert("Keranjang masih kosong!");
-    return;
-  }
-
-  const total  = cart.reduce((sum, i) => sum + i.subtotal, 0);
-  const qtyOri   = cart.find(i => i.name === "Si' Ori")?.qty   || 0;
-  const qtyNori  = cart.find(i => i.name === "Si' Nori")?.qty  || 0;
-  const qtySpicy = cart.find(i => i.name === "Si' Spicy")?.qty || 0;
-
-  // Simpan ke spreadsheet
-  const result = await submitOrderToSheet({
-    nama, lokasi, tanggal, metode,
-    qtyOri, qtyNori, qtySpicy, total,
-    salesCode: document.getElementById("salesCode")?.value || "Direct"
-  });
-
-  if (result.status === "error") {
-    alert("Gagal: " + result.message);
-    return;
-  }
-
-  // Buka WhatsApp
-  const pesanWA = `Halo Si Dopa! Saya mau pesan:\n\n` +
-    cart.map(i => `• ${i.name} x${i.qty} = Rp ${i.subtotal.toLocaleString('id-ID')}`).join('\n') +
-    `\n\nTotal: Rp ${total.toLocaleString('id-ID')}` +
-    `\nNama: ${nama}` +
-    `\nAmbil: ${lokasi}` +
-    `\nTanggal: ${tanggal}` +
-    `\nPembayaran: ${metode}`;
-
-  window.open(`https://wa.me/6283170951060?text=${encodeURIComponent(pesanWA)}`, '_blank');
-  
-  // Refresh stok setelah order
-  loadStock();
-}
-
-// ─── JALANKAN SAAT HALAMAN DIBUKA ──────────────────────
-window.addEventListener("DOMContentLoaded", loadStock);
-    </script>
-</body>
-
-</html>
+        </html>
