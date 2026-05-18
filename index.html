@@ -1093,7 +1093,9 @@ async function loadStock() {
     const url = `https://docs.google.com/spreadsheets/d/${STOCK_SHEET_ID}/gviz/tq?tqx=out:json&sheet=Sheet1`;
     const res  = await fetch(url);
     const text = await res.text();
-    const jsonStr = text.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", "");
+    const start   = text.indexOf("{");
+    const end     = text.lastIndexOf("}");
+    const jsonStr = text.substring(start, end + 1);
     const json    = JSON.parse(jsonStr);
     const rows    = json.table.rows;
  
