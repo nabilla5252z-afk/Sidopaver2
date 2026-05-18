@@ -1080,65 +1080,59 @@
     </div>
 
     <script>
+// ─── KONFIGURASI ───────────────────────────────────────────────
+const APPS_SCRIPT_URL_STOK      = "https://script.google.com/macros/s/AKfycbxuWBeKchMp1e_6MekYZDquzXxZnsCXStPRDLQSuqcjlueH2hb5nHBusJj-TK4YwZc/exec";
+const APPS_SCRIPT_URL_PEMESANAN = "https://script.google.com/macros/s/AKfycbz0dV_PHwD9ceMLqVDNtfrilgrBN6o6NzAlqUZyc1Y_O5_t-SAaCyUZI2w_KeLMNij2/exec";
+const API_KEY        = "KUNCI_RAHASIA_123";
+const STOCK_SHEET_ID = "1LPgbcRikq5q2JZelutuodxlpr1b1s_BU7mIMG6yNgU4";
 
- // ─── KONFIGURASI ───────────────────────────────────────────────
-// ⚠️  Ganti URL ini dengan URL deployment Apps Script yang BARU
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxuWBeKchMp1e_6MekYZDquzXxZnsCXStPRDLQSuqcjlueH2hb5nHBusJj-TK4YwZc/exec";
-const API_KEY         = "KUNCI_RAHASIA_123";
-const STOCK_SHEET_ID  = "1LPgbcRikq5q2JZelutuodxlpr1b1s_BU7mIMG6yNgU4"; // tetap sama
- 
-// ─── BACA STOK DARI GOOGLE SHEET (gviz — tidak kena CORS) ──────
+// ─── BACA STOK DARI GOOGLE SHEET ───────────────────────────────
 async function loadStock() {
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${STOCK_SHEET_ID}/gviz/tq?tqx=out:json&sheet=Sheet1`;
+    const url  = `https://docs.google.com/spreadsheets/d/${STOCK_SHEET_ID}/gviz/tq?tqx=out:json&sheet=Sheet1`;
     const res  = await fetch(url);
     const text = await res.text();
-    const start   = text.indexOf("{");
-    const end     = text.lastIndexOf("}");
-    const jsonStr = text.substring(start, end + 1);
-    const json    = JSON.parse(jsonStr);
-    const rows    = json.table.rows;
- 
+    const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1));
+    const rows = json.table.rows;
+
     const stok = {
       ori:   rows[0]?.c[1]?.v ?? 0,
       nori:  rows[1]?.c[1]?.v ?? 0,
       spicy: rows[2]?.c[1]?.v ?? 0
     };
- 
+
     updateStockDisplay(stok);
   } catch (err) {
     console.error("Gagal ambil stok:", err);
   }
 }
- 
-// ─── TAMPILKAN STOK DI WEBSITE ──────────────────────────────────
+
+// ─── TAMPILKAN STOK ─────────────────────────────────────────────
 function updateStockDisplay(stok) {
   document.getElementById("stockBadgeOri").textContent   = `Stok: ${stok.ori}`;
   document.getElementById("stockBadgeNori").textContent  = `Stok: ${stok.nori}`;
   document.getElementById("stockBadgeSpicy").textContent = `Stok: ${stok.spicy}`;
- 
+
   const total = stok.ori + stok.nori + stok.spicy;
   document.getElementById("totalStockDisplay").textContent = total;
- 
+
   toggleBtn("addBtnOri",   stok.ori);
   toggleBtn("addBtnNori",  stok.nori);
   toggleBtn("addBtnSpicy", stok.spicy);
 }
- 
+
 function toggleBtn(id, stok) {
   const btn = document.getElementById(id);
   btn.disabled    = stok <= 0;
   btn.textContent = stok > 0 ? "Tambah ke Keranjang" : "Stok Habis";
 }
- 
-// ─── KIRIM PESANAN KE APPS SCRIPT (POST + JSON) ─────────────────
-// ✅ PERBAIKAN: hapus mode:"no-cors", ganti ke POST dengan JSON body
+
+// ─── KIRIM PESANAN KE SPREADSHEET PEMESANAN ────────────────────
 async function submitOrderToSheet(orderData) {
   try {
-    const res = await fetch(APPS_SCRIPT_URL.trim(), {
+    const res = await fetch(APPS_SCRIPT_URL_PEMESANAN, {
       method: "POST",
-      // Catatan: tidak pakai Content-Type header karena Apps Script
-      // lebih reliabel menerima tanpa preflight (hindari CORS preflight error)
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({
         key:       API_KEY,
         nama:      orderData.nama,
@@ -1152,22 +1146,45 @@ async function submitOrderToSheet(orderData) {
         salesCode: orderData.salesCode || "Direct"
       })
     });
- 
-    // Apps Script mengembalikan JSON
+
     const result = await res.json();
-    console.log("Pesanan terkirim:", result);
+    console.log("Pesanan terkirim ke sheet pemesanan:", result);
     return result;
- 
+
   } catch (err) {
-    // Tidak alert ke user — WhatsApp tetap terbuka meski ada error jaringan
-    console.error("Gagal kirim pesanan ke sheet:", err);
+    console.error("Gagal kirim pesanan:", err);
     return { status: "error" };
   }
 }
- 
+
+// ─── KURANGI STOK DI SPREADSHEET STOK ──────────────────────────
+async function kurangiStok(qtyOri, qtyNori, qtySpicy) {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL_STOK, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        key:      API_KEY,
+        action:   "kurangi",
+        qtyOri:   qtyOri,
+        qtyNori:  qtyNori,
+        qtySpicy: qtySpicy
+      })
+    });
+
+    const result = await res.json();
+    console.log("Stok dikurangi:", result);
+    return result;
+
+  } catch (err) {
+    console.error("Gagal kurangi stok:", err);
+    return { status: "error" };
+  }
+}
+
 // ─── KERANJANG ──────────────────────────────────────────────────
 let cart = [];
- 
+
 function addToCart(name, price, btn) {
   const qtyInput = btn.closest(".product-content").querySelector(".qty-input");
   const qty      = parseInt(qtyInput.value) || 1;
@@ -1180,24 +1197,24 @@ function addToCart(name, price, btn) {
   }
   renderCart();
 }
- 
+
 function removeFromCart(index) {
   cart.splice(index, 1);
   renderCart();
 }
- 
+
 function renderCart() {
   const cartItems   = document.getElementById("cartItems");
   const totalEl     = document.getElementById("total");
   const checkoutBtn = document.getElementById("checkoutBtn");
- 
+
   if (cart.length === 0) {
     cartItems.innerHTML = '<div class="empty-cart-message">Keranjang Anda masih kosong</div>';
     totalEl.textContent = "Rp 0";
     checkoutBtn.style.display = "none";
     return;
   }
- 
+
   cartItems.innerHTML = cart.map((item, i) => `
     <div class="cart-item">
       <span class="cart-item-name">${item.name}</span>
@@ -1206,29 +1223,29 @@ function renderCart() {
       <button class="remove-item" onclick="removeFromCart(${i})">✕</button>
     </div>
   `).join("");
- 
+
   const total = cart.reduce((sum, i) => sum + i.subtotal, 0);
   totalEl.textContent = `Rp ${total.toLocaleString("id-ID")}`;
   checkoutBtn.style.display = "flex";
 }
- 
+
 function incrementQty(btn) {
   const input = btn.previousElementSibling;
   input.value = parseInt(input.value) + 1;
 }
- 
+
 function decrementQty(btn) {
   const input = btn.nextElementSibling;
   if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
 }
- 
-// ─── BUKA WHATSAPP + KIRIM KE SPREADSHEET ──────────────────────
+
+// ─── BUKA WHATSAPP + KIRIM KE KEDUA SPREADSHEET ────────────────
 async function openWhatsApp() {
   const nama    = document.getElementById("buyerName").value.trim();
   const lokasi  = document.getElementById("pickupLocation").value;
   const tanggal = document.getElementById("pickupDate").value;
   const metode  = document.getElementById("paymentMethod").value;
- 
+
   if (!nama || !lokasi || !tanggal || !metode) {
     alert("Mohon lengkapi semua data pemesan dulu!");
     return;
@@ -1237,20 +1254,23 @@ async function openWhatsApp() {
     alert("Keranjang masih kosong!");
     return;
   }
- 
+
   const total    = cart.reduce((sum, i) => sum + i.subtotal, 0);
   const qtyOri   = cart.find(i => i.name === "Si' Ori")?.qty   || 0;
   const qtyNori  = cart.find(i => i.name === "Si' Nori")?.qty  || 0;
   const qtySpicy = cart.find(i => i.name === "Si' Spicy")?.qty || 0;
- 
-  // ✅ Kirim ke spreadsheet dulu (tidak await — biar tidak delay WhatsApp)
-  submitOrderToSheet({
+
+  // Kirim ke spreadsheet PEMESANAN
+  await submitOrderToSheet({
     nama, lokasi, tanggal, metode,
     qtyOri, qtyNori, qtySpicy, total,
     salesCode: document.getElementById("salesCode")?.value || "Direct"
   });
- 
-  // Langsung buka WhatsApp
+
+  // Kurangi stok di spreadsheet STOK
+  await kurangiStok(qtyOri, qtyNori, qtySpicy);
+
+  // Buka WhatsApp
   const pesanWA =
     `Halo Si Dopa! Saya mau pesan:\n\n` +
     cart.map(i => `• ${i.name} x${i.qty} = Rp ${i.subtotal.toLocaleString("id-ID")}`).join("\n") +
@@ -1259,20 +1279,17 @@ async function openWhatsApp() {
     `\nAmbil: ${lokasi}` +
     `\nTanggal: ${tanggal}` +
     `\nPembayaran: ${metode}`;
- 
+
   window.open(`https://wa.me/6283170951060?text=${encodeURIComponent(pesanWA)}`, "_blank");
- 
-  // Refresh stok setelah 4 detik (beri waktu Apps Script proses pengurangan)
+
+  // Refresh tampilan stok setelah 4 detik
   setTimeout(loadStock, 4000);
 }
- 
-// ─── JALANKAN SAAT HALAMAN DIBUKA ──────────────────────────────
+
+// ─── INISIALISASI ───────────────────────────────────────────────
 window.addEventListener("DOMContentLoaded", loadStock);
- 
-// ─── ADMIN PANEL (tidak ada perubahan, tetap sama) ──────────────
-let adminClickCount = 0;
-let adminClickTimer = null;
- 
+
+// ─── ADMIN PANEL ────────────────────────────────────────────────
 function switchAdminTab(tab) {
   document.getElementById("stockPanel").style.display    = tab === "stock"    ? "block" : "none";
   document.getElementById("preorderPanel").style.display = tab === "preorder" ? "block" : "none";
@@ -1281,15 +1298,16 @@ function switchAdminTab(tab) {
   document.getElementById("tabStockBtn").style.color    = tab === "stock"    ? "white" : "#FF6F00";
   document.getElementById("tabPreorderBtn").style.color = tab === "preorder" ? "white" : "#FF6F00";
 }
- 
+
 function closeAdminPanel() {
   document.getElementById("adminPanelOverlay").classList.remove("active");
 }
- 
+
 function saveAdminChanges() {
-  alert("Fitur admin lokal belum terhubung ke spreadsheet. Ubah stok langsung di Google Sheet.");
+  alert("Ubah stok langsung di Google Sheet.");
   closeAdminPanel();
 }
+ 
     </script>
 </body>
 
