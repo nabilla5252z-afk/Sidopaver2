@@ -355,7 +355,7 @@ Clear cart & form
 ## 📋 FILE LISTING
 
 ```
-c:\Users\MyBook SAGA 4\Downloads\web\
+c:\Users\MyBook SAGA 4\Down\web\
 ├── index.html (MAIN FILE - UPDATED)
 ├── DOKUMENTASI_FITUR_BARU.md (NEW - User Guide)
 ├── TESTING_GUIDE.md (NEW - QA Reference)
