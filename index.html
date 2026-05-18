@@ -1080,180 +1080,187 @@
             </div>
 
             <script>
-        // ─── KONFIGURASI ──────────────────────────────────────
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLcVl8-QdYpvYVB8VoAwH03YmWwFv_eUBm3jw6ycHM_LdKVOXGcnzG2MeHlGK4SFI/exec";
-        // PASTIKAN KEY INI SAMA DENGAN YANG ADA DI APPS SCRIPT
-        const API_KEY = "KUNCI_RAHASIA_123"; 
+        // ─── KONFIGURASI ───────────────────────────────────────
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLcVl8-QdYpvYVB8VoAwH03YmWwFv_eUBm3jw6ycHM_LdKVOXGcnzG2MeHlGK4SFI/exec";
+const API_KEY         = "KUNCI_RAHASIA_123";
+const STOCK_SHEET_ID  = "1LPgbcRikq5q2JZelutuodxlpr1b1s_BU7mIMG6yNgU4";
 
+// ─── BACA STOK LANGSUNG DARI GOOGLE SHEET ──────────────
+// Cara ini tidak kena CORS sama sekali!
+async function loadStock() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${STOCK_SHEET_ID}/gviz/tq?tqx=out:json&sheet=Sheet1`;
+    const res  = await fetch(url);
+    const text = await res.text();
 
-        // ─── AMBIL STOK SAAT HALAMAN DIBUKA ────────────────────
-        async function loadStock() {
-        try {
-            const res  = await fetch(`${APPS_SCRIPT_URL}?action=getStock&key=${API_KEY}`);
-            const data = await res.json();
-            if (data.status === "ok") {
-            updateStockDisplay(data.stok);
-            }
-        } catch (err) {
-            console.error("Gagal ambil stok:", err);
-        }
-        }
+    // Google membungkus JSON-nya, kita ambil bagian dalamnya
+    const jsonStr = text.replace("/*O_o*/\ngoogle.visualization.Query.setResponse(", "").replace(");", "");
+    const json    = JSON.parse(jsonStr);
+    const rows    = json.table.rows;
 
-        function updateStockDisplay(stok) {
-        document.getElementById("stockBadgeOri").textContent   = `Stok: ${stok.ori}`;
-        document.getElementById("stockBadgeNori").textContent  = `Stok: ${stok.nori}`;
-        document.getElementById("stockBadgeSpicy").textContent = `Stok: ${stok.spicy}`;
+    // B2=ori, B3=nori, B4=spicy (index mulai dari 0)
+    const stok = {
+      ori:   rows[0]?.c[1]?.v ?? 0,
+      nori:  rows[1]?.c[1]?.v ?? 0,
+      spicy: rows[2]?.c[1]?.v ?? 0
+    };
 
-        const total = stok.ori + stok.nori + stok.spicy;
-        document.getElementById("totalStockDisplay").textContent = total;
+    updateStockDisplay(stok);
+  } catch (err) {
+    console.error("Gagal ambil stok:", err);
+  }
+}
 
-        // Nonaktifkan tombol jika stok habis
-        toggleBtn("addBtnOri",   stok.ori);
-        toggleBtn("addBtnNori",  stok.nori);
-        toggleBtn("addBtnSpicy", stok.spicy);
-        }
+// ─── TAMPILKAN STOK DI WEBSITE ─────────────────────────
+function updateStockDisplay(stok) {
+  document.getElementById("stockBadgeOri").textContent   = `Stok: ${stok.ori}`;
+  document.getElementById("stockBadgeNori").textContent  = `Stok: ${stok.nori}`;
+  document.getElementById("stockBadgeSpicy").textContent = `Stok: ${stok.spicy}`;
 
-        function toggleBtn(id, stok) {
-        const btn = document.getElementById(id);
-        btn.disabled = stok <= 0;
-        btn.textContent = stok > 0 ? "Tambah ke Keranjang" : "Stok Habis";
-        }
+  const total = stok.ori + stok.nori + stok.spicy;
+  document.getElementById("totalStockDisplay").textContent = total;
 
-        // ─── KIRIM PESANAN KE SPREADSHEET ──────────────────────
-        async function submitOrderToSheet(orderData) {
-        try {
-            // Susun semua data jadi parameter URL
-            const params = new URLSearchParams({
-            action: "submitOrder",
-            key: API_KEY,
-            nama: orderData.nama,
-            lokasi: orderData.lokasi,
-            tanggal: orderData.tanggal,
-            metode: orderData.metode,
-            qtyOri: orderData.qtyOri,
-            qtyNori: orderData.qtyNori,
-            qtySpicy: orderData.qtySpicy,
-            total: orderData.total,
-            salesCode: orderData.salesCode
-            });
+  toggleBtn("addBtnOri",   stok.ori);
+  toggleBtn("addBtnNori",  stok.nori);
+  toggleBtn("addBtnSpicy", stok.spicy);
+}
 
-            const res = await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`);
-            const data = await res.json();
-            return data;
-        } catch (err) {
-            console.error("Gagal kirim pesanan:", err);
-            return { status: "error", message: "Koneksi gagal" };
-        }
-        }
+function toggleBtn(id, stok) {
+  const btn = document.getElementById(id);
+  btn.disabled    = stok <= 0;
+  btn.textContent = stok > 0 ? "Tambah ke Keranjang" : "Stok Habis";
+}
 
-        // ─── FUNGSI KERANJANG ───────────────────────────────────
-        let cart = [];
+// ─── KIRIM PESANAN (no-cors = bypass CORS) ─────────────
+async function submitOrderToSheet(orderData) {
+  try {
+    const params = new URLSearchParams({
+      action:    "submitOrder",
+      key:       API_KEY,
+      nama:      orderData.nama,
+      lokasi:    orderData.lokasi,
+      tanggal:   orderData.tanggal,
+      metode:    orderData.metode,
+      qtyOri:    orderData.qtyOri,
+      qtyNori:   orderData.qtyNori,
+      qtySpicy:  orderData.qtySpicy,
+      total:     orderData.total,
+      salesCode: orderData.salesCode
+    });
 
-        function addToCart(name, price, btn) {
-        const qtyInput = btn.closest('.product-content').querySelector('.qty-input');
-        const qty = parseInt(qtyInput.value) || 1;
-        
-        const existing = cart.find(i => i.name === name);
-        if (existing) {
-            existing.qty += qty;
-            existing.subtotal = existing.qty * existing.price;
-        } else {
-            cart.push({ name, price, qty, subtotal: price * qty });
-        }
-        renderCart();
-        }
+    // no-cors: tidak bisa baca respons, tapi data TERKIRIM ke Apps Script
+    await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`, { mode: "no-cors" });
 
-        function removeFromCart(index) {
-        cart.splice(index, 1);
-        renderCart();
-        }
+    return { status: "ok" };
+  } catch (err) {
+    console.error("Gagal kirim pesanan:", err);
+    return { status: "error", message: "Koneksi gagal" };
+  }
+}
 
-        function renderCart() {
-        const cartItems = document.getElementById("cartItems");
-        const totalEl   = document.getElementById("total");
-        const checkoutBtn = document.getElementById("checkoutBtn");
+// ─── KERANJANG ─────────────────────────────────────────
+let cart = [];
 
-        if (cart.length === 0) {
-            cartItems.innerHTML = '<div class="empty-cart-message">Keranjang Anda masih kosong</div>';
-            totalEl.textContent = "Rp 0";
-            checkoutBtn.style.display = "none";
-            return;
-        }
+function addToCart(name, price, btn) {
+  const qtyInput = btn.closest(".product-content").querySelector(".qty-input");
+  const qty      = parseInt(qtyInput.value) || 1;
+  const existing = cart.find(i => i.name === name);
+  if (existing) {
+    existing.qty     += qty;
+    existing.subtotal = existing.qty * existing.price;
+  } else {
+    cart.push({ name, price, qty, subtotal: price * qty });
+  }
+  renderCart();
+}
 
-        cartItems.innerHTML = cart.map((item, i) => `
-            <div class="cart-item">
-            <span class="cart-item-name">${item.name}</span>
-            <span class="cart-item-qty">x${item.qty}</span>
-            <span class="cart-item-price">Rp ${item.subtotal.toLocaleString('id-ID')}</span>
-            <button class="remove-item" onclick="removeFromCart(${i})">✕</button>
-            </div>
-        `).join('');
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  renderCart();
+}
 
-        const total = cart.reduce((sum, i) => sum + i.subtotal, 0);
-        totalEl.textContent = `Rp ${total.toLocaleString('id-ID')}`;
-        checkoutBtn.style.display = "flex";
-        }
+function renderCart() {
+  const cartItems   = document.getElementById("cartItems");
+  const totalEl     = document.getElementById("total");
+  const checkoutBtn = document.getElementById("checkoutBtn");
 
-        function incrementQty(btn) {
-        const input = btn.previousElementSibling;
-        input.value = parseInt(input.value) + 1;
-        }
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<div class="empty-cart-message">Keranjang Anda masih kosong</div>';
+    totalEl.textContent = "Rp 0";
+    checkoutBtn.style.display = "none";
+    return;
+  }
 
-        function decrementQty(btn) {
-        const input = btn.nextElementSibling;
-        if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
-        }
+  cartItems.innerHTML = cart.map((item, i) => `
+    <div class="cart-item">
+      <span class="cart-item-name">${item.name}</span>
+      <span class="cart-item-qty">x${item.qty}</span>
+      <span class="cart-item-price">Rp ${item.subtotal.toLocaleString("id-ID")}</span>
+      <button class="remove-item" onclick="removeFromCart(${i})">✕</button>
+    </div>
+  `).join("");
 
-        // ─── BUKA WHATSAPP + SIMPAN KE SPREADSHEET ─────────────
-        async function openWhatsApp() {
-        const nama   = document.getElementById("buyerName").value.trim();
-        const lokasi = document.getElementById("pickupLocation").value;
-        const tanggal= document.getElementById("pickupDate").value;
-        const metode = document.getElementById("paymentMethod").value;
+  const total = cart.reduce((sum, i) => sum + i.subtotal, 0);
+  totalEl.textContent = `Rp ${total.toLocaleString("id-ID")}`;
+  checkoutBtn.style.display = "flex";
+}
 
-        if (!nama || !lokasi || !tanggal || !metode) {
-            alert("Mohon lengkapi semua data pemesan dulu!");
-            return;
-        }
-        if (cart.length === 0) {
-            alert("Keranjang masih kosong!");
-            return;
-        }
+function incrementQty(btn) {
+  const input = btn.previousElementSibling;
+  input.value = parseInt(input.value) + 1;
+}
 
-        const total  = cart.reduce((sum, i) => sum + i.subtotal, 0);
-        const qtyOri   = cart.find(i => i.name === "Si' Ori")?.qty   || 0;
-        const qtyNori  = cart.find(i => i.name === "Si' Nori")?.qty  || 0;
-        const qtySpicy = cart.find(i => i.name === "Si' Spicy")?.qty || 0;
+function decrementQty(btn) {
+  const input = btn.nextElementSibling;
+  if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+}
 
-        // Simpan ke spreadsheet
-        const result = await submitOrderToSheet({
-            nama, lokasi, tanggal, metode,
-            qtyOri, qtyNori, qtySpicy, total,
-            salesCode: document.getElementById("salesCode")?.value || "Direct"
-        });
+// ─── BUKA WHATSAPP + KIRIM KE SPREADSHEET ──────────────
+async function openWhatsApp() {
+  const nama    = document.getElementById("buyerName").value.trim();
+  const lokasi  = document.getElementById("pickupLocation").value;
+  const tanggal = document.getElementById("pickupDate").value;
+  const metode  = document.getElementById("paymentMethod").value;
 
-        if (result.status === "error") {
-            alert("Gagal: " + result.message);
-            return;
-        }
+  if (!nama || !lokasi || !tanggal || !metode) {
+    alert("Mohon lengkapi semua data pemesan dulu!");
+    return;
+  }
+  if (cart.length === 0) {
+    alert("Keranjang masih kosong!");
+    return;
+  }
 
-        // Buka WhatsApp
-        const pesanWA = `Halo Si Dopa! Saya mau pesan:\n\n` +
-            cart.map(i => `• ${i.name} x${i.qty} = Rp ${i.subtotal.toLocaleString('id-ID')}`).join('\n') +
-            `\n\nTotal: Rp ${total.toLocaleString('id-ID')}` +
-            `\nNama: ${nama}` +
-            `\nAmbil: ${lokasi}` +
-            `\nTanggal: ${tanggal}` +
-            `\nPembayaran: ${metode}`;
+  const total    = cart.reduce((sum, i) => sum + i.subtotal, 0);
+  const qtyOri   = cart.find(i => i.name === "Si' Ori")?.qty   || 0;
+  const qtyNori  = cart.find(i => i.name === "Si' Nori")?.qty  || 0;
+  const qtySpicy = cart.find(i => i.name === "Si' Spicy")?.qty || 0;
 
-        window.open(`https://wa.me/6283170951060?text=${encodeURIComponent(pesanWA)}`, '_blank');
-        
-        // Refresh stok setelah order
-        loadStock();
-        }
+  // Kirim ke spreadsheet (no-cors, tidak perlu tunggu respons)
+  submitOrderToSheet({
+    nama, lokasi, tanggal, metode,
+    qtyOri, qtyNori, qtySpicy, total,
+    salesCode: document.getElementById("salesCode")?.value || "Direct"
+  });
 
-        // ─── JALANKAN SAAT HALAMAN DIBUKA ──────────────────────
-        window.addEventListener("DOMContentLoaded", loadStock);
+  // Langsung buka WhatsApp
+  const pesanWA =
+    `Halo Si Dopa! Saya mau pesan:\n\n` +
+    cart.map(i => `• ${i.name} x${i.qty} = Rp ${i.subtotal.toLocaleString("id-ID")}`).join("\n") +
+    `\n\nTotal: Rp ${total.toLocaleString("id-ID")}` +
+    `\nNama: ${nama}` +
+    `\nAmbil: ${lokasi}` +
+    `\nTanggal: ${tanggal}` +
+    `\nPembayaran: ${metode}`;
+
+  window.open(`https://wa.me/6283170951060?text=${encodeURIComponent(pesanWA)}`, "_blank");
+
+  // Refresh stok setelah beberapa detik (beri waktu Apps Script proses)
+  setTimeout(loadStock, 3000);
+}
+
+// ─── JALANKAN SAAT HALAMAN DIBUKA ──────────────────────
+window.addEventListener("DOMContentLoaded", loadStock);
             </script>
         </body>
 
