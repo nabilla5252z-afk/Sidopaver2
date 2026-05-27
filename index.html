@@ -1313,8 +1313,22 @@ async function openWhatsApp() {
   setTimeout(loadStock, 4000);
 }
 
+// ─── BACA SALES CODE DARI URL ───────────────────────────────────
+function readSalesCode() {
+  const params    = new URLSearchParams(window.location.search);
+  const salesCode = params.get("sales");
+  
+  if (salesCode) {
+    document.getElementById("salesCode").value = salesCode;
+    console.log("Sales code terdeteksi:", salesCode);
+  }
+}
+
 // ─── INISIALISASI ───────────────────────────────────────────────
-window.addEventListener("DOMContentLoaded", loadStock);
+window.addEventListener("DOMContentLoaded", () => {
+  loadStock();
+  readSalesCode();
+});
 
 // ─── ADMIN PANEL ────────────────────────────────────────────────
 function switchAdminTab(tab) {
