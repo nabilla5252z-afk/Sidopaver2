@@ -1283,14 +1283,41 @@ async function openWhatsApp() {
     // await kurangiStok(qtyOri, qtyNori, qtySpicy);
 
     // 4. Buka WhatsApp setelah data sukses masuk ke Google Sheet
+   // Format tanggal ke "Sabtu, 23 Mei 2026"
+    const tanggalFormatted = new Date(tanggal + "T00:00:00")
+      .toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+
+    // Info sales
+    const salesCode = document.getElementById("salesCode")?.value || "";
+    const salesInfo = salesCode && salesCode !== "Marketing/Direct"
+      ? `Sales: ${salesCode}\n`
+      : "";
+
+    // Susun pesan WA
     const pesanWA =
-      `Halo Si Dopa! Saya mau pesan:\n\n` +
-      cart.map(i => `• ${i.name} x${i.qty} = Rp ${i.subtotal.toLocaleString("id-ID")}`).join("\n") +
-      `\n\nTotal: Rp ${total.toLocaleString("id-ID")}` +
-      `\nNama: ${nama}` +
-      `\nAmbil: ${lokasi}` +
-      `\nTanggal: ${tanggal}` +
-      `\nPembayaran: ${metode}`;
+      `🛍️ PESANAN SI DOPA - SINGKONG CRUNCHY BALLS\n\n` +
+      `👤 DATA PEMESAN:\n` +
+      `Nama: ${nama}\n` +
+      `${salesInfo}` +
+      `Tempat Ambil: ${lokasi}\n` +
+      `Tanggal Ambil: ${tanggalFormatted}\n` +
+      `Metode Bayar: ${metode}\n\n` +
+      `📋 DETAIL PESANAN:\n` +
+      cart.map((i, index) =>
+        `${index + 1}. ${i.name}\n` +
+        `   Qty: ${i.qty} × Rp ${i.price.toLocaleString("id-ID")} = Rp ${i.subtotal.toLocaleString("id-ID")}`
+      ).join("\n") +
+      `\n━━━━━━━━━━━━━━━━\n` +
+      `💰 Total: Rp ${total.toLocaleString("id-ID")}\n` +
+      `━━━━━━━━━━━━━━━━\n` +
+      `Terima kasih telah memesan! 🙏`;
+
+    // ← baris ini JANGAN dihapus, sudah ada di kode aslimu
 
     window.open(`https://wa.me/6283170951060?text=${encodeURIComponent(pesanWA)}`, "_blank");
 
