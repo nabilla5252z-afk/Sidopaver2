@@ -1081,8 +1081,8 @@
 
     <script>
 // ─── KONFIGURASI ───────────────────────────────────────────────
-const APPS_SCRIPT_URL_STOK      = "https://script.google.com/macros/s/AKfycbxuWBeKchMp1e_6MekYZDquzXxZnsCXStPRDLQSuqcjlueH2hb5nHBusJj-TK4YwZc/exec";
-const APPS_SCRIPT_URL_PEMESANAN = "https://script.google.com/macros/s/AKfycbw31dtnJX4mtMmRkRhd4czoBAgSBocLawjzOYkybkbBpAlIpvdkbCWrU6v36Zu7jbY/exec";
+const APPS_SCRIPT_URL_STOK      = "https://script.google.com/macros/s/AKfycbzXaxkp_W_sEaSqpRets9rxaNhY3ufATeNikeMoAa8AjeqYvJxSNHiZtYiA0Vere08/exec";
+const APPS_SCRIPT_URL_PEMESANAN = "https://script.google.com/macros/s/AKfycbzXaxkp_W_sEaSqpRets9rxaNhY3ufATeNikeMoAa8AjeqYvJxSNHiZtYiA0Vere08/exec";
 const API_KEY        = "KUNCI_RAHASIA_123";
 const STOCK_SHEET_ID = "1LPgbcRikq5q2JZelutuodxlpr1b1s_BU7mIMG6yNgU4";
 
@@ -1275,7 +1275,7 @@ async function openWhatsApp() {
     await submitOrderToSheet({
       nama, lokasi, tanggal, metode,
       qtyOri, qtyNori, qtySpicy, total,
-      salesCode: document.getElementById("salesCode")?.value || "Direct"
+      salesCode: document.getElementById("salesCode")?.value || "Marketing"
     });
 
     // 💡 CATATAN: Fungsi kurangiStok() kamu belum dipanggil di kode asli. 
